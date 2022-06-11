@@ -33,7 +33,7 @@ jobs:
       env:
         GIT_NAME: WillCAI2020
         GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
-        REPO: github.com/WillCAI2020/WillCAI2020.github.io
+        REPO: github.com/ltfjx/evershifting-fountain
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         cd ./public && git init && git add .
