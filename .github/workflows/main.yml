@@ -39,8 +39,8 @@ jobs:
         
     - name: Setup Git Infomation
       run: | 
-        git config --global user.name '<你的用户名>' 
-        git config --global user.email '<你登录的email>'
+        git config --global user.name 'ltfjx' 
+        git config --global user.email 'ltfjx2333@gmail.com'
     - name: Deploy Hexo 
       run: |
         hexo clean
