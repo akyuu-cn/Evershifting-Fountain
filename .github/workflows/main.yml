@@ -1,34 +1,43 @@
-name: CI
+# 文件路径 .github/workflows/deployment.yml
+name: Deployment
+
 on:
   push:
-    branches:
-      - main
+    branches: [main] # only push events on source branch trigger deployment
+
 jobs:
-  build:
+  hexo-deployment:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v1
-        with:
-          ref: main
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
-        with:
-          version: ${{ matrix.node_version }}
-      - name: Setup hexo
-        env:
-          ACTION_DEPLOY_KEY: ${{ secrets.HEXO_DEPLOY_PRI }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global user.email "lujiahao0708@gmail.com"
-          git config --global user.name "lujiahao0708"
-          npm install hexo-cli -g
-          npm install
-      - name: Hexo deploy
-        run: |
-          hexo clean
-          hexo d
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Install dependencies & Generate static files
+      run: |
+        node -v
+        npm i -g hexo-cli
+        npm i
+        hexo clean
+        hexo g
+    - name: Deploy to Github Pages
+      env:
+        GIT_NAME: WillCAI2020
+        GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+        REPO: github.com/WillCAI2020/WillCAI2020.github.io
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        cd ./public && git init && git add .
+        git config --global user.name $GIT_NAME
+        git config --global user.email $GIT_EMAIL
+        git commit -m "Site deployed by GitHub Actions"
+        git push --force --quiet "https://$GH_TOKEN@$REPO" master:pages
