@@ -4,16 +4,16 @@
 
 # Site
 title: Evershifting Fountain
-subtitle: ' ~ Endless dream of Astral'
+subtitle: ''
 description: ''
 keywords:
-author: Ltfjx
+author: RLt
 language: zh-CN
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
-url: http://ltfjx.github.io
+url: https://ltfjx.uof.edu.kg
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
