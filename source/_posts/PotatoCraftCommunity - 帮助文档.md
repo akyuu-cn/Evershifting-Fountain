@@ -1,7 +1,7 @@
 ---
 title: PotatoCraftCommunity - 帮助文档
 date: 2021-04-18 0:18:15
-index_img: /assets/pcc_help/cover.png
+index_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/210418_1/cover.png
 categories: "光辉"
 tags:
  - Minecraft
@@ -95,7 +95,7 @@ tags:
 `例如：一张256x128的图片会在游戏内转换为长2格、宽1格的地图墙`
 2. 上传到图床：比如 [imgtu](https://imgtu.com/) 。
 3. 从图床获取链接：以**上面的图床**为例，复制这个链接即可**（可以检查结尾是否为.jpg/.png）**。
-![获取链接](/assets/pcc_help/imgurl.png)
+![获取链接](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/210418_1/imgurl.png)
 4. 游戏内下载图片：执行 **/imagemap download [名称] [图片URL链接]**
 5. 放置地图画：执行 **/imagemap list** ，并**鼠标点击**右方的**Place**，**右击**墙面的**左上角**即可。
 提示： 地图画需要**手动清理**，建议放之前检查一遍。
