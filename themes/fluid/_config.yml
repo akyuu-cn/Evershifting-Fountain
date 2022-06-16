@@ -970,7 +970,7 @@ about:
 # Custom Page through `hexo new page`
 #---------------------------
 page:
-  banner_img:https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/resources/bg.jpg
+  banner_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/resources/bg.jpg
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
