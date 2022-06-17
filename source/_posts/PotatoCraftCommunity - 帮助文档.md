@@ -5,10 +5,11 @@ index_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_
 categories: "光辉"
 tags:
  - Minecraft
+excerpt: PCC是一个完全社区运营的白名单服务器。由于教程过长，所以写了这份帮助文档。
 ---
 # PotatoCraftCommunity
 <font size=5>**欢迎来到PCC！**  </font>
-<font size=4>这是一个完全社区~~指我自己~~运营的白名单服务器。  
+<font size=4>这是一个完全由社区~~指我自己~~运营的白名单服务器。  
 由于教程过长，所以写了这份**帮助文档**。</font>  
 ***
 <font size=5>目录</font>
