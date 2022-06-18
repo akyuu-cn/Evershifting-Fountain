@@ -27,6 +27,8 @@ jobs:
         node -v
         npm i -g hexo-cli
         npm i
+        npm install hexo-generator-sitemap --save
+        npm install hexo-generator-baidu-sitemap --save
         hexo clean
         hexo g
     - name: Deploy to Github Pages
