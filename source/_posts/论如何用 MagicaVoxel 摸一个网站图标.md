@@ -1,0 +1,28 @@
+---
+title: 论如何用 MagicaVoxel 摸一个网站图标
+date: 2022-06-20 23:55:15
+index_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206202359208.jpg
+banner_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210031692.png
+categories: "发现"
+tags:
+ - MagicaVoxel
+ - 设计
+ - 网站
+excerpt: 做了一个简洁美观的图标。无所不能的 MagicaVoxel。
+---
+# 模型
+拼凑出 EF 的图案，作为网站的图标。颜色采用了浅蓝与浅红的搭配。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210002743.png)
+# 渲染
+关闭太阳光源，只保留天空光源。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210004411.png)
+将背景设置为黑色或其他颜色，方便后面处理。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210004145.png)
+摄影机模式改为 SG，视野改为 30。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210007180.png)
+打开摄影机标尺，调整到正确视角。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210009704.png)
+画面降噪，保存图片。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210010991.png)
+扔进 PS 抠像，进行压缩等处理。上传到资源服务器，设置为网页图标，大功告成。
+![](https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/220620_1/202206210013839.png)
