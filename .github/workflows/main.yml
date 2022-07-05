@@ -18,11 +18,11 @@ jobs:
         submodules: true
 
     - name: deploy file to server
-      uses: wlixcc/SFTP-Deploy-Action@v1.0 
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:  
         username: 'potatodev'
         server: '${{ secrets.SERVER_IP }}' 
-        ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+        password: '${{ secrets.SSH_PASSWORD }}'
         local_path: './*'
         remote_path: '/www/wwwroot/akyuu-cn'
         delete_remote_files: true
