@@ -20,11 +20,10 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '16.15.1'
 
     - name: Install dependencies & Generate static files
       run: |
-        node -v
         npm i -g hexo-cli
         npm i
         npm install hexo-generator-sitemap --save
@@ -33,7 +32,7 @@ jobs:
         hexo g
     - name: Deploy to Github Pages
       env:
-        GIT_NAME: WillCAI2020
+        GIT_NAME: EF
         GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
         REPO: github.com/ltfjx/evershifting-fountain
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -43,3 +42,12 @@ jobs:
         git config --global user.email $GIT_EMAIL
         git commit -m "Site deployed by GitHub Actions"
         git push --force --quiet "https://$GH_TOKEN@$REPO" master:pages
+    - name: deploy file to server
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:  
+        username: 'root'
+        server: '${{ secrets.SERVER_IP }}' 
+        password: '${{ secrets.SSH_PASSWORD }}'
+        local_path: './public/*'
+        remote_path: '/www/wwwroot/akyuu-cn'
+        delete_remote_files: true
