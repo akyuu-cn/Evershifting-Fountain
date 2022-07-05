@@ -48,6 +48,6 @@ jobs:
         username: 'root'
         server: '${{ secrets.SERVER_IP }}' 
         password: '${{ secrets.SSH_PASSWORD }}'
-        local_path: './*'
+        local_path: './public/*'
         remote_path: '/www/wwwroot/akyuu-cn'
         delete_remote_files: true
