@@ -33,7 +33,7 @@ jobs:
         hexo g
     - name: Deploy to Github Pages
       env:
-        GIT_NAME: WillCAI2020
+        GIT_NAME: EF
         GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
         REPO: github.com/ltfjx/evershifting-fountain
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -43,3 +43,11 @@ jobs:
         git config --global user.email $GIT_EMAIL
         git commit -m "Site deployed by GitHub Actions"
         git push --force --quiet "https://$GH_TOKEN@$REPO" master:pages
+    - name: deploy file to server
+      uses: wlixcc/SFTP-Deploy-Action@v1.0 
+      with:  
+        username: 'root'   #ssh user name
+        server: '${{ secrets.SERVER_IP }}' #引用之前创建好的secret
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }} #引用之前创建好的secret
+        local_path: './*'
+        remote_path: '/www/wwwroot/akyuu-cn'
