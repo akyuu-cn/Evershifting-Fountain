@@ -1,7 +1,7 @@
 ---
 title: 这里是RLt的个人博客
 categories: "光辉"
-banner_img: https://ltfjx-hexo-blog-1256621903.cos.ap-shanghai.myqcloud.com/blog_pic/about/banner.png
+banner_img: /resources/potato/is/life/blog_pic/about/banner.png
 sticky: 100
 tags:
  - Hexo
