@@ -20,7 +20,7 @@ jobs:
     - name: deploy file to server
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:  
-        username: 'potatodev'
+        username: 'root'
         server: '${{ secrets.SERVER_IP }}' 
         password: '${{ secrets.SSH_PASSWORD }}'
         local_path: './*'
