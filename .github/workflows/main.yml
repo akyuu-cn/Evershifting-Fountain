@@ -46,8 +46,8 @@ jobs:
     - name: deploy file to server
       uses: wlixcc/SFTP-Deploy-Action@v1.0 
       with:  
-        username: 'root'   #ssh user name
-        server: '${{ secrets.SERVER_IP }}' #引用之前创建好的secret
-        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }} #引用之前创建好的secret
+        username: 'potatodev'
+        server: '${{ secrets.SERVER_IP }}' 
+        passowrd: ${{ secrets.SSH_PASSWORD }} 
         local_path: './*'
         remote_path: '/www/wwwroot/akyuu-cn'
