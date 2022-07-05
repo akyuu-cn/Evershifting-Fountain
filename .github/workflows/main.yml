@@ -22,7 +22,7 @@ jobs:
       with:  
         username: 'potatodev'
         server: '${{ secrets.SERVER_IP }}' 
-        password: '${{ secrets.SSH_PASSWORD }}'
+        ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
         local_path: './*'
         remote_path: '/www/wwwroot/akyuu-cn'
         delete_remote_files: true
