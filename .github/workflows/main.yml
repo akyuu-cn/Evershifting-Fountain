@@ -1,9 +1,8 @@
-# 文件路径 .github/workflows/deployment.yml
-name: Deployment
+name: Hexo Deployment
 
 on:
   push:
-    branches: [main] # only push events on source branch trigger deployment
+    branches: [main]
 
 jobs:
   hexo-deployment:
@@ -30,6 +29,7 @@ jobs:
         npm install hexo-generator-baidu-sitemap --save
         hexo clean
         hexo g
+        
     - name: Deploy to Github Pages
       env:
         GIT_NAME: EF
@@ -42,12 +42,13 @@ jobs:
         git config --global user.email $GIT_EMAIL
         git commit -m "Site deployed by GitHub Actions"
         git push --force --quiet "https://$GH_TOKEN@$REPO" master:pages
-    - name: deploy file to server
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-      with:  
-        username: 'root'
-        server: '${{ secrets.SERVER_IP }}' 
-        password: '${{ secrets.SSH_PASSWORD }}'
-        local_path: './public/*'
-        remote_path: '/www/wwwroot/akyuu-cn'
-        delete_remote_files: true
+        
+    - name: Deploy to server
+      uses: easingthemes/ssh-deploy@v2.2.11
+      env:
+        SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
+        ARGS: "-avz --delete"
+        SOURCE: "public/"
+        REMOTE_HOST: '${{ secrets.SERVER_IP }}'
+        REMOTE_USER: 'root'
+        TARGET: '/www/wwwroot/akyuu-cn'
