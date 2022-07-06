@@ -1,5 +1,5 @@
 ---
-title: 这里是RLt的个人博客
+title: RLt's Blog | 星辉生万物
 categories: "光辉"
 banner_img: /resources/potato/is/life/blog_pic/about/banner.webp
 sticky: 100
@@ -7,7 +7,7 @@ tags:
  - Hexo
  - 杂谈
  - 网站
-excerpt: 感谢来访。我会在这里记录一些偏向个人的、杂碎的事情。一些更正式的文章会发布在 UOF 上，你可以在右上角找到跳转链接。点击了解更多。
+excerpt: 感谢来访。这里是我的博客，我会在这里记录一些偏向个人的、杂碎的事情。点击这里了解更多。
 ---
 ### 感谢来访。
 ## 关于建立网站的目的
@@ -15,12 +15,14 @@ excerpt: 感谢来访。我会在这里记录一些偏向个人的、杂碎的�
 建立这个站的目的主要有两个，一个是练练写博客的技能，另一个就是记录下自己干过的比较有意思的事。
 
 ## 关于 UOF
-UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博客站，相对来说运营成本较高，也有着更高的自由度。UOF 这个站点最初的理念就是一个合作博客。我会把更加正式的、相对来说更有意思的文章发在 UOF 上。
+UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博客站，相对来说运营成本较高，也有着更高的自由度。UOF 这个站点最初的理念就是一个合作博客。我会把更加正式的、相对来说更有意思的文章收集在 UOF 上。（也就是说，Evershifting Fountain 会囊括所有文章，而 UOF 则收集一些我的精选文章）
 [https://uof.edu.kg/](https://uof.edu.kg/)
 
 ## 关于网站访问的一些问题
-由于我采用了 Hexo + Github Pages + ~~Cloudflare CDN~~ **腾讯云COS** 的博客方案，国内的访问速度变快了，但是要花钱（悲
-域名采用了 UOF 的二级域名，以后会考虑换成自己的，当然现在也没太大必要就是了。
+~~由于我采用了 Hexo + Github Pages + Cloudflare CDN **腾讯云COS** 的博客方案，国内的访问速度变快了，但是要花钱（悲
+域名采用了 UOF 的二级域名，以后会考虑换成自己的，当然现在也没太大必要就是了。~~
+
+已经不会有访问问题了。目前网站转移到了我自己的域名（akyuu.cn）下，且经过备案+使用国内服务器。
 
 ## 关于版权
 首页大图: [pixiv_id=98831654](https://www.pixiv.net/artworks/98831654)
