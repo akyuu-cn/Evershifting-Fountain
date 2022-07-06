@@ -1,7 +1,7 @@
 ---
 title: 这里是RLt的个人博客
 categories: "光辉"
-banner_img: /resources/potato/is/life/blog_pic/about/banner.png
+banner_img: /resources/potato/is/life/blog_pic/about/banner.webp
 sticky: 100
 tags:
  - Hexo
