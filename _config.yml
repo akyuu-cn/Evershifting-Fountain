@@ -104,5 +104,5 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy: 
   type: git
-  repo:  git@github.com:Ltfjx/evershifting-fountain.git
+  repo:  git@github.com:akyuu-cn/evershifting-fountain.git
   branch: pages

@@ -104,8 +104,21 @@ function loadWidget(config) {
 	(function welcomeMessage() {
 		let text;
 		if (location.pathname === "/") { // 如果是主页
+			const weekdate = new Date().getDay()
 			const now = new Date().getHours();
-			if (now > 5 && now <= 7) text = "早上好！一日之计在于晨，美好的一天就要开始了。";
+			if (weekdate == 4) {
+				text = [
+				"今日はKFC狂乱木曜日，支付宝転我50，慰撫我支離滅裂的心",
+				"最讨厌网络乞丐了，想吃星期四疯狂肯德基的不会自己买吗，什么都伸手要，觉得我说的对的请给我也点一份。",
+				"我本是显赫世家的少爷，却被诡计多端的管家所害!家人弃我!师门逐我!甚至断我灵脉!重来一生，今天肯德基疯狂星期四!谁请我吃？",
+				"我是盗号的，我把热力图的号盗了，但是我看了这个人的聊天记录跟微博，发现她过得非常艰苦，她的吃住一直很烂，，我看到大家的生活都很富足，我希望有人看见了能救济她一下， 请她吃一顿肯德基疯狂星期四，就这样吧，眼眶都湿润了，我下了。",
+				"大家好，我是b站董事长陈睿。我其实被李副ceo架空了，现在正在天桥底下啃咸菜。但我早就预料到她有反心，在那之前就把我无数忠诚的部下还有二次元们埋入了公司各个层面，现在只需要v我50，请他们吃一顿疯狂星期四，就可以重新启动他们夺回公司大权，让b站重回二次元怀抱，到时候，直接认命你为b站格拉摩根分部总裁，再送你一万年大会员。",
+				"肯德基到底到了你们多少钱，每个星期四都要在朋友圈和裙里问KFC疯狂星期四有无，还每个星期都编新的段子，我就不信肯德基有这么大的魔力，转我五十，我今天亲自去肯德基看看",
+				"你好，我是奥特曼，我正在外星和敌人战斗！没有能量了！听说今天肯德基疯狂星期四，我现在需要有人给我带9.9块钱2个的吮指原味鸡补充能量。恢复后我请你来外星做客。",
+				"今日是狂気の木曜日、好兄弟ｖ我５０救い我の腹、ＫＦＣ飽喰、感じ温暖、我、感謝！！"
+			];			
+			}
+			else if (now > 5 && now <= 7) text = "早上好！一日之计在于晨，美好的一天就要开始了。";
 			else if (now > 7 && now <= 11) text = "上午好！工作顺利嘛，不要久坐，多起来走动走动哦！";
 			else if (now > 11 && now <= 13) text = "中午了，工作了一个上午，现在是午餐时间！";
 			else if (now > 13 && now <= 17) text = "午后很容易犯困呢，今天的运动目标完成了吗？";
@@ -113,7 +126,8 @@ function loadWidget(config) {
 			else if (now > 19 && now <= 21) text = "晚上好，今天过得怎么样？";
 			else if (now > 21 && now <= 23) text = ["已经这么晚了呀，早点休息吧，晚安～", "深夜时要爱护眼睛呀！"];
 			else text = "你是夜猫子呀？这么晚还不睡觉，明天起的来嘛？";
-		} else if (document.referrer !== "") {
+			} 
+		else if (document.referrer !== "") {
 			const referrer = new URL(document.referrer),
 				domain = referrer.hostname.split(".")[1];
 			if (location.hostname === referrer.hostname) text = `欢迎阅读<span>「${document.title.split(" - ")[0]}」</span>`;
@@ -150,6 +164,8 @@ function loadWidget(config) {
 		sessionStorage.setItem("waifu-text", priority);
 		const tips = document.getElementById("waifu-tips");
 		tips.innerHTML = text;
+		tips.style.margin = "-" + (50+(Math.trunc((text.length-1)/15))*20) + "px 20px";
+		console.log(getComputedStyle(tips).margin);
 		tips.classList.add("waifu-tips-active");
 		messageTimer = setTimeout(() => {
 			sessionStorage.removeItem("waifu-text");
