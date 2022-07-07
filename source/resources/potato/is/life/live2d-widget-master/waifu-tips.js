@@ -106,7 +106,7 @@ function loadWidget(config) {
 		if (location.pathname === "/") { // 如果是主页
 			const weekdate = new Date().getDay()
 			const now = new Date().getHours();
-			if (weekdate == 4) {
+			if (weekdate == 4) { // KFC 疯狂星期四 meme
 				text = [
 				"今日はKFC狂乱木曜日，支付宝転我50，慰撫我支離滅裂的心",
 				"最讨厌网络乞丐了，想吃星期四疯狂肯德基的不会自己买吗，什么都伸手要，觉得我说的对的请给我也点一份。",
@@ -164,8 +164,7 @@ function loadWidget(config) {
 		sessionStorage.setItem("waifu-text", priority);
 		const tips = document.getElementById("waifu-tips");
 		tips.innerHTML = text;
-		tips.style.margin = "-" + (50+(Math.trunc((text.length-1)/15))*20) + "px 20px";
-		console.log(getComputedStyle(tips).margin);
+		tips.style.margin = "-" + (50+(Math.trunc((text.length-1)/15))*20) + "px 20px"; // 根据文本长度调整对话框位置
 		tips.classList.add("waifu-tips-active");
 		messageTimer = setTimeout(() => {
 			sessionStorage.removeItem("waifu-text");
