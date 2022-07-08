@@ -29,6 +29,7 @@ UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博
 归档大图: [pixiv_id=84629237](https://www.pixiv.net/artworks/84629237)
 分类大图: [pixiv_id=53868539](https://www.pixiv.net/artworks/53868539)
 标签大图: [pixiv_id=55884310](https://www.pixiv.net/artworks/55884310)
+404大图: [pixiv_id=90224409](https://www.pixiv.net/artworks/90224409)
 
 本页 banner: [pixiv_id=23491957](https://www.pixiv.net/artworks/23491957)
 

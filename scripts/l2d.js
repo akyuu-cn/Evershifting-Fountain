@@ -1,1 +1,2 @@
 hexo.extend.injector.register('head_begin', '<script src="/resources/potato/is/life/live2d-widget-master/autoload.js"></script>', 'default');
+hexo.extend.injector.register('head_begin', '<script type="module" src="/resources/potato/is/life/potatojs/devtoolsdetect.js"></script>', 'default');

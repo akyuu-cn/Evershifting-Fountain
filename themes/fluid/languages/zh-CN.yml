@@ -35,8 +35,8 @@ links:
 
 page404:
   menu: '页面不存在'
-  title: '页面不存在'
-  subtitle: '页面不存在'
+  title: '404'
+  subtitle: '404 - 页面被热力猫吃了！'
 
 post:
   toc: '目录'
