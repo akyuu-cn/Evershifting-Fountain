@@ -183,17 +183,20 @@
 		"selector": ".category-item[title='星宿']",
 		"text": ["与现实世界里的故事相关的分类"]
 	}, {
-		"selector": ".category-item[title='探索']",
+		"selector": ".category-item[title='月华']",
 		"text": ["记录自己做了些什么的分类"]
 	}, {
-		"selector": ".category-item[title='发现']",
-		"text": ["随便写点啥的分类"]
+		"selector": ".category-item[title='日影']",
+		"text": ["随手记点啥的分类"]
 	}, {
 		"selector": ".category-item[title='共振']",
 		"text": ["与开发相关的分类"]
 	}, {
 		"selector": ".category-item[title='光辉']",
 		"text": ["公告/发布相关的分类"]
+	}, {
+		"selector": "#关于热力猫",
+		"text": ["关于我！"]
 	}],
 	"click": [{
 		"selector": "#live2d",

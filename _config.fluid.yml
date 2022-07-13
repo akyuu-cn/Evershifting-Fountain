@@ -145,8 +145,8 @@ color:
 
   # 顶部菜单背景色
   # Color of navigation bar background
-  navbar_bg_color: "#2f4154"
-  navbar_bg_color_dark: "#3f3f3f"
+  navbar_bg_color: "#FF7340"
+  navbar_bg_color_dark: "#dd5c2d"
 
   # 顶部菜单字体色
   # Color of navigation bar text
@@ -185,12 +185,12 @@ color:
 
   # 文章超链接字体色
   # Color of post link
-  post_link_color: "#0366d6"
+  post_link_color: "#FF7340"
   post_link_color_dark: "#FF7340"
 
   # 超链接悬浮时字体色
   # Color of link when hovering
-  link_hover_color: "#30a9de"
+  link_hover_color: "#ff5600"
   link_hover_color_dark: "#ff5600"
 
   # 超链接悬浮背景色
@@ -238,6 +238,7 @@ custom_js:
 custom_css: 
   - https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css
   - /resources/potato/is/life/potatocss/font.css
+  - /resources/potato/is/life/potatocss/navbar.css
 # 网页访问统计
 # Analysis of website visitors
 web_analytics:  # 网页访问统计
@@ -341,7 +342,7 @@ navbar:
     # 不透明度，数字越大透明度越低，注意透明过度可能看不清菜单字体
     # Ratio of opacity, 1.0 is completely opaque
     # available: 0 - 1.0
-    alpha: 0.4
+    alpha: 0.8
 
   # 导航栏菜单，可自行增减，key 用来关联 languages/*.yml，如不存在关联则显示 key 本身的值；icon 是 css class，可以省略；增加 name 可以强制显示指定名称
   # Navigation bar menu. `key` is used to associate languages/*.yml. If there is no association, the value of `key` itself will be displayed; if `icon` is a css class, it can be omitted; adding `name` can force the display of the specified name
@@ -350,7 +351,7 @@ navbar:
     - { key: "archive", link: "/archives/", icon: "iconfont icon-archive-fill" }
     - { key: "category", link: "/categories/", icon: "iconfont icon-category-fill" }
     - { key: "tag", link: "/tags/", icon: "iconfont icon-tags-fill" }
-    - { key: "UOF", link: "https://uof.edu.kg/", icon: "iconfont icon-books" }
+    - { key: 'links', link: '/links/', icon: 'iconfont icon-link-fill' }
     - { key: "关于我", link: "/about/", icon: "iconfont icon-user-fill" }
     - {
        key: '更多',
@@ -621,7 +622,7 @@ post:
 
     # 开启后，只有在文章 Front-matter 里指定 `category_bar: true` 才会展示分类，也可以通过 `category_bar: ["分类A"]` 来指定分类
     # If true, only set `category_bar: true` in Front-matter will enable sidebar of category, also set `category_bar: ["CategoryA"]` to specify categories
-    specific: false
+    specific: true
 
     # 置于板块的左侧或右侧
     # place in the board
@@ -1005,30 +1006,38 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /resources/potato/is/life/resources/bg.webp
-  banner_img_height: 60
+  banner_img: /resources/potato/is/life/resources/bg_links.webp
+  banner_img_height: 75
   banner_mask_alpha: 0.3
   # 友链的成员项
   # Member item of page
   items:
     - {
+      title: "University Of Fool",
+      intro: "愚笨大学博客站",
+      link: "https://uof.edu.kg/",
+      avatar: "/resources/potato/is/life/resources/links_uof.webp"
+    }
+    - {
+      title: "Faraway Ash",
+      intro: "<strike>可爱的</strike> Lingrottin 的博客",
+      link: "https://lingrottin.uof.edu.kg/",
+      avatar: "/resources/potato/is/life/resources/links_fa.webp"
+    }
+    - {
+      title: "UrsusFeline",
+      intro: "<strike>最可爱的</strike> UrsusFeline 的博客",
+      link: "https://lgy07.github.io/",
+      avatar: "/resources/potato/is/life/resources/links_ursus.ico"
+    }
+    - {
       title: "Fluid Blog",
-      intro: "主题博客",
+      intro: "Fluid 主题博客",
       link: "https://hexo.fluid-dev.com/",
       avatar: "/img/favicon.png"
     }
-    - {
-      title: "Fluid Docs",
-      intro: "主题使用指南",
-      link: "https://hexo.fluid-dev.com/docs/",
-      avatar: "/img/favicon.png"
-    }
-    - {
-      title: "Fluid Repo",
-      intro: "主题 GitHub 仓库",
-      link: "https://github.com/fluid-dev/hexo-theme-fluid",
-      avatar: "/img/favicon.png"
-    }
+
+
 
   # 当成员头像加载失败时，替换为指定图片
   # When the member avatar fails to load, replace the specified image

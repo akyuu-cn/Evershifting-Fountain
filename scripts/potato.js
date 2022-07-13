@@ -1,0 +1,2 @@
+hexo.extend.injector.register('body_end', '<script src="/resources/potato/is/life/potatojs/404-remove-footer.js"></script>', 'default');
+hexo.extend.injector.register('body_end', '<script src="/resources/potato/is/life/potatojs/cate_sort.js"></script>', 'default');
