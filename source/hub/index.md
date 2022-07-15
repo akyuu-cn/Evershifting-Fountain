@@ -6,9 +6,9 @@ date: 2022-07-08 11:52:04
 <div class="markdown-body">
 Potato
     {% btn url, text, title %}
-    
-    
-    
+
+​    
+​    
 ```Javascript
     
 /*!
@@ -69,5 +69,5 @@ export default devtools;
 ```
 </div>
 
-
+<iframe src="https://www.geogebra.org/calculator/fhu97wmr?embed" width="800" height="600" allowfullscreen style="border: 1px solid #e4e4e4;border-radius: 4px;" frameborder="0"></iframe>
 
