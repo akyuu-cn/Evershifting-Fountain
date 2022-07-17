@@ -237,7 +237,7 @@ custom_js:
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css: 
-  - https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css
+  - /resources/potato/is/life/css/fontawsome.all.min.css
   - /resources/potato/is/life/potatocss/font.css
   - /resources/potato/is/life/potatocss/navbar.css
   - /resources/potato/is/life/potatocss/codeblock.css
