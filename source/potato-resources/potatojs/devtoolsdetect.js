@@ -3,7 +3,7 @@
 // 热力猫 DevTools 检测
 //
 
-import devtools from '/resources/potato/is/life/js/devtools.js';
+import devtools from '/potato-resources/js/devtools.js';
 
 let messageTimer
 

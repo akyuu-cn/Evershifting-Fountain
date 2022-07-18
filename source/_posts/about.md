@@ -1,7 +1,7 @@
 ---
 title: RLt's Blog | 星辉生万物
 categories: "光辉"
-banner_img: /resources/potato/is/life/blog_pic/about/banner.webp
+banner_img: /potato-resources/blog_pic/about/banner.webp
 sticky: 100
 tags:
  - Hexo
