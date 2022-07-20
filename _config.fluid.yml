@@ -484,6 +484,9 @@ index:
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
   banner_img: /potato-resources/resources/bg.webp
 
+  # 首页第二图层，可形成视差效果
+  banner_img_l2: /potato-resources/resources/bg_l2.webp
+
   # 头图高度，屏幕百分比
   # Height ratio of banner image
   # Available: 0 - 100
