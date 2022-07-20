@@ -1,33 +1,48 @@
 <%
+var banner_img_l2 = "/potato-resources/resources/bg_l2.webp" || theme.index.banner_img
 var banner_img = page.banner_img || theme.index.banner_img
-var banner_img_height = parseFloat(page.banner_img_height || theme.index.banner_img_height)
 var banner_mask_alpha = parseFloat(page.banner_mask_alpha || theme.index.banner_mask_alpha)
-var subtitle = page.subtitle || page.title
 %>
 
-<div id="banner" class="banner" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-     style="background: url('<%- url_for(banner_img) %>') no-repeat center center; background-size: cover;">
-  <div class="full-bg-img">
-    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
-      <div class="banner-text text-center fade-in-up">
-        <div class="h2">
-          <% if(theme.fun_features.typing.enable && in_scope(theme.fun_features.typing.scope)) { %>
-            <span id="subtitle" data-typed-text="<%= subtitle %>"></span>
-          <% } else { %>
-            <span id="subtitle"><%- subtitle %></span>
-          <% } %>
-        </div>
-
-        <% if (is_post()) { %>
-          <%- inject_point('postMetaTop') %>
-        <% } %>
-      </div>
-
-      <% if (theme.scroll_down_arrow.enable && theme.scroll_down_arrow.banner_height_limit <= banner_img_height && page.layout !== '404') { %>
-        <div class="scroll-down-bar">
-          <i class="iconfont icon-arrowdown"></i>
-        </div>
-      <% } %>
-    </div>
+<div id="banner" class="banner" <%- theme.banner && theme.banner.parallax && 'parallax=false' %>
+     style="overflow-x:hidden; background: url('<%- url_for(banner_img) %>') no-repeat center center; background-size: cover;">
+  <div class="mask flex-center" style="overflow-x:hidden; background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
   </div>
+
+  <div id="banner_l2" class="banner_l2" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
+    style="opacity:0; overflow-x:hidden; background: url('<%- url_for(banner_img_l2) %>') no-repeat center center; background-size: cover;">
+  </div>
+
+  <script>
+    if (isPhone()==false && location.pathname === "/"){
+      addEventListener("mousemove",potato)
+    }
+
+    if (location.pathname === "/" ){
+    document.getElementById("banner_l2").style.opacity = "1"
+    }
+
+    function potato (e){
+      var speed = 2
+      l2 = document.querySelectorAll("#banner_l2")[0]
+      var x2 = (window.innerWidth - e.pageX * speed)/100-15
+      var y2 = (window.innerWidth - e.pageY * speed)/100-15
+      l2.style.transform = `translateX(${x2}px) translateY(${y2}px)`
+
+
+      speed = 0.5
+      l1 = document.querySelectorAll("#banner")[0]
+      x1 = (window.innerWidth - e.pageX * speed)/100-15
+      y1 = (window.innerWidth - e.pageY * speed)/100-15
+      l1.style.transform = `translateX(${x1}px) translateY(${y1}px)`
+    }
+
+    function isPhone (){
+      var info = navigator.userAgent
+      var isPhone = /mobile/i.test(info)
+      return isPhone
+    }
+
+
+  </script>
 </div>
