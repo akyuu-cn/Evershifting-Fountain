@@ -5,12 +5,12 @@ var banner_mask_alpha = parseFloat(page.banner_mask_alpha || theme.index.banner_
 %>
 
 <div id="banner" class="banner" <%- theme.banner && theme.banner.parallax && 'parallax=false' %>
-     style="overflow-x:hidden; background: url('<%- url_for(banner_img) %>') no-repeat center center; background-size: cover;">
-  <div class="mask flex-center" style="overflow-x:hidden; background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">
+     style="overflow-x:hidden; background: url('<%- url_for(banner_img) %>') no-repeat center center; background-size: cover;filter: brightness(<%= parseFloat(banner_mask_alpha) * 100 %>%);">
   </div>
 
   <div id="banner_l2" class="banner_l2" <%- theme.banner && theme.banner.parallax && 'parallax=true' %>
-    style="opacity:0; overflow-x:hidden; background: url('<%- url_for(banner_img_l2) %>') no-repeat center center; background-size: cover;">
+    style="opacity:0; overflow-x:hidden; background: url('<%- url_for(banner_img_l2) %>') no-repeat center center; background-size: cover; filter: brightness(<%= parseFloat(banner_mask_alpha) * 100 %>%);">
+    <!--<div class="mask flex-center" style="overflow-x:hidden; background-color: rgba(0, 0, 0, <%= parseFloat(banner_mask_alpha) %>)">-->
   </div>
 
   <script>
