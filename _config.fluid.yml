@@ -241,7 +241,6 @@ custom_css:
   - /potato-resources/potatocss/font.css
   - /potato-resources/potatocss/navbar.css
   - /potato-resources/potatocss/codeblock.css
-  - /potato-resources/potatocss/mobile_ban_move.css
 # 网页访问统计
 # Analysis of website visitors
 web_analytics:  # 网页访问统计
