@@ -1,0 +1,5 @@
+/*禁止手机端左右滑动*/
+
+.hidden{
+    overflow-x:hidden;
+}
