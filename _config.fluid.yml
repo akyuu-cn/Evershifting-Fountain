@@ -329,6 +329,24 @@ iconfont: //at.alicdn.com/t/font_1736178_lbnruvf0jn.css
 # 导航栏的相关配置
 # Navigation bar
 navbar:
+  # 显示导航栏 logo
+  # Displays a logo on the navbar
+  logo:
+    enable: true
+
+    # logo 图片的路径
+    # Path of the logo image
+    file: "/potato-resources/resources/fluid.png"
+
+    # logo 图片的大小(单位自带)
+    # Size of the logo image(unit needed)
+    size: "2rem"
+
+    # logo 图片距离文字的边距(单位自带)
+    # CSS padding-right of the logo image(unit needed)
+    padding_right: "0.5rem"
+
+
   # 导航栏左侧的标题，为空则按 hexo config 中 `title` 显示
   # The title on the left side of the navigation bar. If empty, it is based on `title` in hexo config
   blog_title: "Evershifting Fountain | 万象泉"
@@ -395,7 +413,45 @@ search:
 banner:
   # 视差滚动，图片与板块会随着屏幕滚动产生视差效果
   # Scrolling parallax
-  parallax: true
+  parallax_scrolling: true
+
+  # 视差效果，图层会随着鼠标产生视差效果
+  # Mouse moving parallax
+  parallax:
+    
+    # 是否启用视差效果
+    # enable or not
+    enable: true
+
+    # 在指定页面开启，不填则在所有页面开启
+    # Enable in specified page, all pages by default
+    # Options: home | post | tag | category | about | links | page | 404
+    scope: [home]
+    
+    # 视差图层（仅在首页起效果）
+    # images used for parallaxing (only used on the home page)
+    images:
+
+      # 图片源
+      # image source
+      - source: '/potato-resources/resources/bg.webp'
+      
+        # 图层大小，100%则必须指定 yparallax 和 xparallax 才会移动！
+        # layout size
+        size: '110%'
+
+        # 允许垂直移动的最大距离，auto 或为空则根据图像大小自动计算、
+        # maximum moving length vertically, if set to 'auto' or is empty, this is calculated automatically against image size
+        yparallax: '10%'
+
+        # 允许水平移动的最大距离，auto 或为空则根据图像大小自动计算
+        # maximum moving length horizontally, if set to 'auto' or is empty, this is calculated automatically against image size
+        xparallax: '10%'
+
+      - source: '/potato-resources/resources/bg_l2.webp'
+        size: '110%'
+        yparallax: '30%'
+        xparallax: '30%'
 
   # 图片最小的宽高比，以免图片两边被过度裁剪，适用于移动端竖屏时，如需关闭设为 0
   # Minimum ratio of width to height, applicable to the vertical screen of mobile device, if you need to close it, set it to 0
