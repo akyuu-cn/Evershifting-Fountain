@@ -1,5 +1,4 @@
 !(function () {
-    /** 计时起始时间，自行修改 **/
     var start = new Date("2021/02/09 01:14:00");
 
     function update() {
