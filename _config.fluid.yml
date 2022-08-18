@@ -99,7 +99,7 @@ fun_features:
 
     # 在指定页面开启，不填则在所有页面开启
     # Enable in specified page, all pages by default
-    # Options: home | post | tag | category | about | links | page | 404
+    # Options: home | post | archives | categories | tags | about | links | page | 404
     scope: [home]
 
   # 为文章内容中的标题添加锚图标
@@ -424,7 +424,12 @@ banner:
 
     # 在指定页面开启，不填则在所有页面开启
     # Enable in specified page, all pages by default
-    # Options: home | post | tag | category | about | links | page | 404
+    # Options: home | post | archives | categories | tags | about | links | page | 404
+    #
+    # 关于 post：你可以在文章的头部设置独立的视差效果
+    # About post: You can set independent parallax for each post in their post files.
+    # 一旦给文章独立设置了视差效果，这篇文章的视差效果始终开启，不受此处配置的影响
+    # And once you set it, the post's parallax will always be on. This option will not affect it any more.
     scope: [home]
     
     # 视差图层（仅在首页起效果）
@@ -437,20 +442,20 @@ banner:
       
         # 图层大小，100%则必须指定 yparallax 和 xparallax 才会移动！
         # layout size
-        size: '110%'
+        size: '105%'
 
         # 允许垂直移动的最大距离，auto 或为空则根据图像大小自动计算、
         # maximum moving length vertically, if set to 'auto' or is empty, this is calculated automatically against image size
-        yparallax: '10%'
+        yparallax: ''
 
         # 允许水平移动的最大距离，auto 或为空则根据图像大小自动计算
         # maximum moving length horizontally, if set to 'auto' or is empty, this is calculated automatically against image size
-        xparallax: '10%'
+        xparallax: ''
 
       - source: '/potato-resources/resources/bg_l2.webp'
         size: '110%'
-        yparallax: '30%'
-        xparallax: '30%'
+        yparallax: ''
+        xparallax: ''
 
   # 图片最小的宽高比，以免图片两边被过度裁剪，适用于移动端竖屏时，如需关闭设为 0
   # Minimum ratio of width to height, applicable to the vertical screen of mobile device, if you need to close it, set it to 0
