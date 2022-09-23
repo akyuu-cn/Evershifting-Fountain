@@ -7,5 +7,5 @@ Disallow: /css/
 Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
-Sitemap: ltfjx.uof.edu.kg/sitemap.xml
-Sitemap: ltfjx.uof.edu.kg/baidusitemap.xml
+Sitemap: akyuu.cn/sitemap.xml
+Sitemap: akyuu.cn/baidusitemap.xml
