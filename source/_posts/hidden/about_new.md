@@ -4,6 +4,7 @@ date: 2021/02/09 01:14:00
 categories: "光辉"
 banner_img: /potato-resources/blog_pic/about/banner.webp
 sticky: 100
+hide: true
 tags:
  - Hexo
  - 杂谈
