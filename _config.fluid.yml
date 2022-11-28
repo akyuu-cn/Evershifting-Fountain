@@ -372,7 +372,7 @@ navbar:
     - { key: "category", link: "/categories/", icon: "iconfont icon-category-fill" }
     - { key: "tag", link: "/tags/", icon: "iconfont icon-tags-fill" }
     - { key: 'links', link: '/links/', icon: 'iconfont icon-link-fill' }
-    - { key: "关于我", link: "/about/", icon: "iconfont icon-user-fill" }
+    - { key: "about", link: "/about/", icon: "iconfont icon-user-fill" }
     - {
        key: '更多',
         icon: 'iconfont icon-comment',
@@ -617,13 +617,13 @@ index:
 # Post Page
 #---------------------------
 post:
-  banner_img: /potato-resources/resources/bg.webp
+  banner_img: /potato-resources/resources/banner_default.webp
   banner_img_height: 70
   banner_mask_alpha: 0.3
 
   # 文章在首页的默认封面图，当没有指定 index_img 时会使用该图片，若两者都为空则不显示任何图片
   # Path of the default post cover when `index_img` is not set. If both are empty, no image will be displayed
-  default_index_img:
+  default_index_img: /potato-resources/resources/cover_default.webp
 
   # 文章标题下方的元信息
   # Meta information below title
@@ -1032,8 +1032,8 @@ about:
   banner_img_height: 65
   banner_mask_alpha: 0.3
   avatar: /potato-resources/resources/avatar.webp
-  name: "RLt"
-  intro: "高中生 | 数码爱好者 | 深色即是正义 | 学习中Coder | 会一点点摄影 | 东方厨 | 音游人 | 社恐"
+  name: "关于"
+  intro: "高三狗 | 数码爱好者 | 深色即是正义 | 学习中 Coder | 会一点点摄影 | 东方厨 | 音游人"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, The icon is no longer a link, but a hovering QR code
   icons:
@@ -1105,7 +1105,7 @@ links:
       title: "Fluid Blog",
       intro: "Fluid 主题博客",
       link: "https://hexo.fluid-dev.com/",
-      avatar: "/img/favicon.png"
+      avatar: "/img/fluid.png"
     }
 
 
