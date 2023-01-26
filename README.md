@@ -1,7 +1,7 @@
 <div align="center">
-<img width="90" src="source/potato-resources/resources/fluid.png" alt="logo"></br></br>
-<p>Evershifting Fountain | 万象泉</p>
-<p>- 光辉 -</p>
+<img width="90" src="source/potato-resources/resources/fluid.png" alt="logo">
+<h1>Evershifting Fountain | 万象泉</h1>
+<h3>- 光辉 -</h3>
 </div>
 
 [![](readme_resources/ef.webp)](https://akyuu.cn)
