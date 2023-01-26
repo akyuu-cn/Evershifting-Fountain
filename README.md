@@ -1,6 +1,6 @@
 <div align="center">
 <img width="90" src="source/potato-resources/resources/fluid.png" alt="logo">
-<h1>Evershifting Fountain | 万象泉</h1>
+<h2>Evershifting Fountain | 万象泉</h2>
 <h3>- 光辉 -</h3>
 </div>
 
