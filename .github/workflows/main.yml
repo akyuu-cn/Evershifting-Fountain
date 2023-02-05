@@ -52,3 +52,4 @@ jobs:
         TARGET: '/www/wwwroot/akyuu-cn'
         ARGS: "-avz --delete --chown=www:www"
         SOURCE: "public/" 
+        SCRIPT_BEFORE: ls
