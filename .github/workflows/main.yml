@@ -50,5 +50,5 @@ jobs:
         REMOTE_USER: '${{ secrets.USER }}'
         REMOTE_PORT: '${{ secrets.PORT }}'
         TARGET: '/www/wwwroot/akyuu-cn'
-        ARGS: "-avz --delete chown=www:www"
+        ARGS: "-avz --delete --chown=www:www"
         SOURCE: "public/"
