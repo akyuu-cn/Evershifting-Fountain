@@ -43,7 +43,7 @@ jobs:
         rm -rf ./.git
         
     - name: Deploy to server
-      uses: easingthemes/ssh-deploy@v4.0.5
+      uses: easingthemes/ssh-deploy@v2.2.11
       env:
         SSH_PRIVATE_KEY: '${{ secrets.SSH_PRIVATE_KEY }}'
         REMOTE_HOST: '${{ secrets.SERVER_IP }}'
@@ -51,4 +51,4 @@ jobs:
         REMOTE_PORT: '${{ secrets.PORT }}'
         TARGET: '/www/wwwroot/akyuu-cn'
         ARGS: "-avz --delete --chown=www:www"
-        SOURCE: "public/" 
+        SOURCE: "public/"
