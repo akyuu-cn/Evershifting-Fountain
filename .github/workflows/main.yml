@@ -49,7 +49,7 @@ jobs:
         REMOTE_HOST: '${{ secrets.SERVER_IP }}'
         REMOTE_USER: '${{ secrets.USER }}'
         REMOTE_PORT: '${{ secrets.PORT }}'
-        TARGET: '/www/wwwroot/akyuu-cn'
+        TARGET: '/www/wwwroot/blog.akyuu.cn'
         ARGS: "-avz --delete --chown=www:www"
         SOURCE: "public/" 
         SCRIPT_BEFORE: ls
