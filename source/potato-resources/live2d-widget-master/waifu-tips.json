@@ -51,9 +51,6 @@
 		"selector": ".menu-item a",
 		"text": ["快看看这里都有什么呢？"]
 	}, {
-		"selector": "[alt='avatar']",
-		"text": ["但这只是张二次元美少女的图片，死宅真恶心", "这是是热力图哦(*´∇｀*)"]
-	}, {
 		"selector": ".site-state",
 		"text": ["这是文章的统计信息～", "要不要点进去看看？"]
 	}, {

@@ -13,14 +13,14 @@ UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博
 
 ## 关于版权
 首页大图: [pixiv_id=98831654](https://www.pixiv.net/artworks/98831654)
-归档大图: [pixiv_id=84629237](https://www.pixiv.net/artworks/84629237)
-分类大图: [pixiv_id=53868539](https://www.pixiv.net/artworks/53868539)
-标签大图: [pixiv_id=55884310](https://www.pixiv.net/artworks/55884310)
-友链大图: [pixiv_id=98359825](https://www.pixiv.net/artworks/98359825)
-404 大图: [pixiv_id=99636294](https://www.pixiv.net/artworks/99636294)
+归档大图: [pixiv_id=87649605](https://www.pixiv.net/artworks/87649605)
+分类大图: [pixiv_id=104231610](https://www.pixiv.net/artworks/104231610)
+标签大图: [pixiv_id=87649605](https://www.pixiv.net/artworks/87649605)
+友链大图: [pixiv_id=104407312](https://www.pixiv.net/artworks/104407312)
+404 大图: [pixiv_id=104380157](https://www.pixiv.net/artworks/104380157)
 
 文章默认 banner、cover: [pixiv_id=38578032](https://www.pixiv.net/artworks/38578032)
-头像: [pixiv_id=92918030](https://www.pixiv.net/artworks/92918030)
+头像: [pixiv_id=104551223](https://www.pixiv.net/artworks/104551223)
 
 此外，博客中的图片、引用等我也会尽可能标注来源并根据协议使用。
 如果有版权相关问题，请通过邮箱联系我：<span class="label label-info">2114085565@qq.com</span>

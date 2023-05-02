@@ -1030,7 +1030,7 @@ tag:
 about:
   enable: true
   banner_img: /potato-resources/resources/bg_about.webp
-  banner_img_height: 65
+  banner_img_height: 75
   banner_mask_alpha: 0.3
   avatar: /potato-resources/resources/avatar.webp
   name: "RLt"
