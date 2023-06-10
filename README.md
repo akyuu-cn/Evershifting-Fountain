@@ -13,4 +13,5 @@
 ---
 
 ### Special thanks for
+ - Illust by 砂(s73d)
  - Lingrottin
