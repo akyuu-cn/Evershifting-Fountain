@@ -510,6 +510,10 @@ footer:
       <span id="times">载入时分秒...</span>
       <script src="/potato-resources/potatojs/duration.js"></script>
     </div>
+    <div style="font-size: 0.75rem;margin-top: 0.5%;opacity: 0.3">
+      <a href="#" id="hitokoto">...</a>
+      <script src="/potato-resources/potatojs/hitokoto.js"></script>
+    </div>
   '
 
   # 展示网站的 PV、UV 统计数
