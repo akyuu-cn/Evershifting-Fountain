@@ -1,4 +1,4 @@
-// 注意：live2d_path 参数应使用绝对路径
+// live2d_path 参数建议使用绝对路径
 const live2d_path = "/potato-resources/live2d-widget-master/";
 //const live2d_path = "/live2d-widget/";
 
@@ -31,35 +31,37 @@ if (screen.width >= 768) {
 		loadExternalResource(live2d_path + "live2d.min.js", "js"),
 		loadExternalResource(live2d_path + "waifu-tips.js", "js")
 	]).then(() => {
+		// 配置选项的具体用法见 README.md
 		initWidget({
 			waifuPath: live2d_path + "waifu-tips.json",
 			//apiPath: "https://live2d.fghrsh.net/api/",
-			cdnPath: "/potato-resources/live2d_api/"
+			cdnPath: "/potato-resources/live2d_api/",
+			tools: ["hitokoto", "asteroids", "switch-model", "switch-texture", "photo", "info", "quit"]
 		});
 	});
 }
-// initWidget 第一个参数为 waifu-tips.json 的路径，第二个参数为 API 地址
-// API 后端可自行搭建，参考 https://github.com/fghrsh/live2d_api
-// 初始化看板娘会自动加载指定目录下的 waifu-tips.json
 
 console.log(`
 live2d-widget loaded!
-
-  く__,.ヘヽ.        /  ,ー､ 〉
-           ＼ ', !-─‐-i  /  /´
-           ／｀ｰ'       L/／｀ヽ､
-         /   ／,   /|   ,   ,       ',
-       ｲ   / /-‐/  ｉ  L_ ﾊ ヽ!   i
-        ﾚ ﾍ 7ｲ｀ﾄ   ﾚ'ｧ-ﾄ､!ハ|   |
-          !,/7 '0'     ´0iソ|    |
-          |.从"    _     ,,,, / |./    |
-          ﾚ'| i＞.､,,__  _,.イ /   .i   |
-            ﾚ'| | / k_７_/ﾚ'ヽ,  ﾊ.  |
-              | |/i 〈|/   i  ,.ﾍ |  i  |
-             .|/ /  ｉ：    ﾍ!    ＼  |
-              kヽ>､ﾊ    _,.ﾍ､    /､!
-              !'〈//｀Ｔ´', ＼ ｀'7'ｰr'
-              ﾚ'ヽL__|___i,___,ンﾚ|ノ
-                  ﾄ-,/  |___./
-                  'ｰ'    !_,.:
-`);
+%c
+　　　　　　　　　 　　　_,,..　-─‐- ､.,_
+　　　　　　　　　 ,　'"´　　　　 　　　　｀'ｒO ､　　 　　＿＿_(ヽ_＿＿
+　　　　　　 　 ／　　　　　　　　　　　 　{､ヽ O　 　 └┐┌─┐┌┘
+　　　　　 　 /　 　 .／　 　 ／|　　　　　 |--＼　　　 r┘└─┘└┐（] /7　　（ヽ　　 ＿＿__
+　　　　　　 ,'　 　 /　 　 ／-‐'!　 , 　 　 / 　　､＼　 ｀二二l　l二二´ｒ‐‐' ,二l l二二ヽ└─ｧ/[l[l
+　　　　　　 |　 　 |　　 ./ｧ‐=,､|／|　 .／ﾊ.　 　 | rヽ └─┐┌─┘￣（（__　　　 　| |　　//_
+　　　　　　 | 　 .八　 /ｲ!ﾉ　l| ヽ. |／|､/_.|　　　|/　　　　　.|__」　　　　　 ヽ┘　　　くノ　　ヽ┘
+　　　　　　,'　／　（ヽ|'　ゝ‐ﾟ'　　 　 ｧ'!´Y| 　,　,'　　 ＿＿ｒ､＿＿
+　　 　 　 / ´　 　 /ヽ　"　　　　 ,　lり ﾉ/.／ /　　 └┐┌┐┌┘
+　　 　 ／ 　 　 ／ /人　　　　　　　　ﾞ/イ}／ 　　　l二＿￣＿二l　／> r‐'｀┐ｒ､　/7　ｒ､
+　　　/ 　 　 ／ .／_7、＼　　 ｀　 　ノ＿r/|　　　　　 └┐┌┘　く く　 ｀7/_ｒ ヽ) | |_　|_」
+　 　 |　　|　, '´￣＼　＼　＞‐ァ7て＿,ノ、|　　　　 　　 └┘　　 　＼>　｀(_ｄ､)　 ヽﾉ
+　　　'､ 　∨　 　　　ヽ. 　＼_/ /＼ r'＿ノ},|.　　　　ｒ､　　 ｒ､　　　＿ｒ､＿
+　　　　＼|| 　　　　 r |＼ ／∨|　/ﾄ､|　　ｿ　　 く） | | く） | |　ｒ､└,┌┐,┘ /7　ｒ､
+　 　 　 　 |　_,,.. -‐ ヽ!　　　　ヽヾヽr-､イ_　　　　ｒ'_／l　 ヽ二ノに__￣_二l .| |_　|_」
+　　　　 ｒ::"´::::::::::::::::_」　　　　　／（＼ ,ﾊ::]　　 　 く／ 　 　 |￣|└┐┌「｀! ┌┐
+　　　　 l_,,... -‐ ''"´　'､　　 ＿/　　.|　 ヽ||　　　　　　　　　　|　 |　　￣../ └┘└─┐
+　　　 　 ｀l　　 　 　 　 ＼/:::::::::｀ヽ人　　|ヽ.　　　　　 　　　/ 　 '、 　 く__/r'コ　l二"´
+　　 　 　 .|　　　　　　 ／´￣｀ヽ;:::::＼｀ /:::::|　　　　 　 　, '　,.へ. ＼　　　└┐┌┘
+　　 　 　/|　　　　　r/　　　　　　＼:::::Y:::::::∧ 　　　　　く_／　　 ＼__>　l二二...二二l
+`,"font-family: MS PGothic");
