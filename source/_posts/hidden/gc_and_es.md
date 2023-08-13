@@ -2,7 +2,7 @@
 title: GoogleCardboard试玩与usb网络共享的实用功能
 date: 2021-02-24 00:04:25
 index_img: /assets/gc_and_es/cover.jpg
-categories: "探索"
+categories: "共振"
 hide: true
 tags:
  - 软件
