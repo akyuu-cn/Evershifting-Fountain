@@ -49,7 +49,7 @@ jobs:
         REMOTE_HOST: '${{ secrets.SERVER_IP }}'
         REMOTE_USER: '${{ secrets.USER }}'
         REMOTE_PORT: '${{ secrets.PORT }}'
-        TARGET: '/www/wwwroot/blog.akyuu.cn'
+        TARGET: '/opt/1panel/apps/openresty/openresty/www/sites/blog.akyuu.cn/index'
         ARGS: "-avz --delete --chown=www:www"
         SOURCE: "public/" 
         SCRIPT_BEFORE: ls
