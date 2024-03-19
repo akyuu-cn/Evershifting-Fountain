@@ -1,0 +1,5 @@
+nav#navbar a:hover,
+nav#navbar strong:hover{
+	transition: color 0.2s ease-in-out;
+	color: #ffc8b5;
+}
