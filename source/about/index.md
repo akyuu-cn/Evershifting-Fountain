@@ -9,7 +9,8 @@ layout: about
 
 ## 关于 UOF
 UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博客站，相对来说运营成本较高，也有着更高的自由度。UOF 这个站点最初的理念就是一个合作博客。我会把更加正式的、相对来说更有意思的文章收集在 UOF 上。（也就是说，Evershifting Fountain 会囊括所有文章，而 UOF 则收集一些我的精选文章）
-[https://uof.edu.kg/](https://uof.edu.kg/)
+[https://uof.edu.kg/](https://uof.edu.kg/)  
+由于一些技术问题，UOF 会关停一段时间，期待恢复 :P
 
 ## 关于版权
 首页大图: [pixiv_id=98831654](https://www.pixiv.net/artworks/98831654)
@@ -48,7 +49,7 @@ UOF(University of Fool) 是我和几个朋友共同建立的一个 Wordpress 博
 ~~由于我采用了 Hexo + Github Pages + Cloudflare CDN **腾讯云COS** 的博客方案，国内的访问速度变快了，但是要花钱（悲
 域名采用了 UOF 的二级域名，以后会考虑换成自己的，当然现在也没太大必要就是了。~~
 
-已经不会有访问问题了。目前网站转移到了我自己的域名（akyuu.cn）下，且经过了备案并使用国内服务器。
+已经不会有访问问题了。目前网站转移到了我自己的域名（akyuu.cn）下，使用阿里云服务器。
 
 ## Some memes:
 [![](/potato-resources/resources/about_imacat.jpg)](https://uof.edu.kg/imacat/)
