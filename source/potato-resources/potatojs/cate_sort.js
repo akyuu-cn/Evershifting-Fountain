@@ -6,9 +6,9 @@
 
 if (document.title.split(" - ")[0] == "分类") {
 
-    var cate = document.getElementsByClassName('category row nomargin-x');
+    let cate = document.getElementsByClassName('category row nomargin-x');
 
-    order = ["日影", "月华", "共振", "星宿", "光辉"]
+    const order = ["日影", "月华", "共振", "星宿", "光辉"]
     let temp = ""
 
     for (let i = 0; i < order.length; i++) {
