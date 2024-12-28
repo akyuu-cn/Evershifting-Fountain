@@ -1,7 +1,7 @@
 ---
 title: NyaaCat 申请表
 date: 2022-10-23 16:40:50
-banner_img: /potato-resources/blog_pic/about/banner.webp
+banner_img: /resources/blog/about/banner.webp
 categories: "光辉"
 hide: true
 tags:
@@ -42,31 +42,31 @@ github: [https://github.com/Ltfjx](https://github.com/Ltfjx)
 
 ### 一些截图记录
 
-![](./potato-resources/blog_pic/hidden/nyaacat/1.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/2.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/3.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/4.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/5.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/6.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/7.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/8.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/9.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/10.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/11.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/12.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/13.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/14.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/15.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/16.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/17.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/18.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/19.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/20.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/21.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/22.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/23.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/24.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/25.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/26.webp)
-![](./potato-resources/blog_pic/hidden/nyaacat/27.webp)
+![](./resources/blog/hidden/nyaacat/1.webp)
+![](./resources/blog/hidden/nyaacat/2.webp)
+![](./resources/blog/hidden/nyaacat/3.webp)
+![](./resources/blog/hidden/nyaacat/4.webp)
+![](./resources/blog/hidden/nyaacat/5.webp)
+![](./resources/blog/hidden/nyaacat/6.webp)
+![](./resources/blog/hidden/nyaacat/7.webp)
+![](./resources/blog/hidden/nyaacat/8.webp)
+![](./resources/blog/hidden/nyaacat/9.webp)
+![](./resources/blog/hidden/nyaacat/10.webp)
+![](./resources/blog/hidden/nyaacat/11.webp)
+![](./resources/blog/hidden/nyaacat/12.webp)
+![](./resources/blog/hidden/nyaacat/13.webp)
+![](./resources/blog/hidden/nyaacat/14.webp)
+![](./resources/blog/hidden/nyaacat/15.webp)
+![](./resources/blog/hidden/nyaacat/16.webp)
+![](./resources/blog/hidden/nyaacat/17.webp)
+![](./resources/blog/hidden/nyaacat/18.webp)
+![](./resources/blog/hidden/nyaacat/19.webp)
+![](./resources/blog/hidden/nyaacat/20.webp)
+![](./resources/blog/hidden/nyaacat/21.webp)
+![](./resources/blog/hidden/nyaacat/22.webp)
+![](./resources/blog/hidden/nyaacat/23.webp)
+![](./resources/blog/hidden/nyaacat/24.webp)
+![](./resources/blog/hidden/nyaacat/25.webp)
+![](./resources/blog/hidden/nyaacat/26.webp)
+![](./resources/blog/hidden/nyaacat/27.webp)
 

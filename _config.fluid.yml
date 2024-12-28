@@ -18,11 +18,11 @@
 
 # 用于浏览器标签的图标
 # Icon for browser tab
-favicon: /potato-resources/resources/fluid.png
+favicon: /resources/pictures/fluid.png
 
 # 用于苹果设备的图标
 # Icon for Apple touch
-apple_touch_icon: /potato-resources/resources/fluid.png
+apple_touch_icon: /resources/pictures/fluid.png
 
 # 浏览器标签页中的标题分隔符，效果： 文章名 - 站点名
 # Title separator in browser tab, eg: article - site
@@ -237,10 +237,10 @@ custom_js:
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
-  - /potato-resources/css/fontawsome.all.min.css
-  - /potato-resources/potatocss/font.css
-  - /potato-resources/potatocss/navbar.css
-  - /potato-resources/potatocss/codeblock.css
+  - /resources/css/fontawsome.all.min.css
+  - /resources/css/font.css
+  - /resources/css/navbar.css
+  - /resources/css/codeblock.css
 # 网页访问统计
 # Analysis of website visitors
 web_analytics: # 网页访问统计
@@ -334,7 +334,7 @@ navbar:
 
     # logo 图片的路径
     # Path of the logo image
-    file: "/potato-resources/resources/fluid.png"
+    file: "/resources/pictures/fluid.png"
 
     # logo 图片的大小(单位自带)
     # Size of the logo image(unit needed)
@@ -443,7 +443,7 @@ banner:
     images:
       # 图片源
       # image source
-      - source: "/potato-resources/resources/bg.webp"
+      - source: "/resources/pictures/bg.webp"
 
         # 图层大小，100%则必须指定 yparallax 和 xparallax 才会移动！
         # layout size
@@ -457,7 +457,7 @@ banner:
         # maximum moving length horizontally, if set to 'auto' or is empty, this is calculated automatically against image size
         xparallax: ""
 
-      - source: "/potato-resources/resources/bg_l2.webp"
+      - source: "/resources/pictures/bg_l2.webp"
         size: "110%"
         yparallax: ""
         xparallax: ""
@@ -504,18 +504,18 @@ footer:
   # 页脚第一行文字的 HTML，建议保留 Fluid 的链接，用于向更多人推广本主题
   # HTML of the first line of the footer, it is recommended to keep the Fluid link to promote this theme to more people
   content: |
-    <a>Blog by RLt. Made with</a>
-    <a href='https://hexo.io' target='_blank' rel='nofollow noopener'><span>Hexo</span></a>
-    <i class='iconfont icon-love'></i>
-    <a href='https://github.com/akyuu-cn/hexo-theme-fluid-EF' target='_blank' rel='nofollow noopener'><span>Fluid</span></a>
-    <div style='font-size: 0.75rem;margin-top:0.5%'>
-      <span id='timeDate'>载入天数...</span>
-      <span id='times'>载入时分秒...</span>
-      <script src='/potato-resources/potatojs/duration.js'></script>
+    <div style='font-size: 1.15rem;font-weight: bold;'>
+      <a href='https://hexo.io' target='_blank' rel='nofollow noopener'><span>Hexo</span></a>
+      <i class='iconfont icon-love'></i>
+      <a href='https://github.com/akyuu-cn/hexo-theme-fluid-EF' target='_blank' rel='nofollow noopener'><span>Fluid</span></a>
     </div>
-    <div style='font-size: 0.75rem;margin-top: 0.5%;opacity: 0.3'>
-      <a href='#' id='hitokoto'>...</a>
-      <script src='/potato-resources/potatojs/hitokoto.js'></script>
+    <div style='font-size: 0.75rem;margin-top: 0.5rem;opacity: 0.5'>
+      <span id='timeDate'>...</span>
+      <span id='times'>...</span>
+      <script src='/resources/js/site_duration.js'></script>
+    </div>
+    <div style='font-size: 0.75rem;margin-top: 0.1rem;opacity: 0.25'>
+      <span> - 冷た過ぎる春の雪 何を終わらせ始める - </span>
     </div>
 
   # 展示网站的 PV、UV 统计数
@@ -548,10 +548,10 @@ footer:
 index:
   # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
-  banner_img: /potato-resources/resources/bg.webp
+  banner_img: /resources/pictures/bg.webp
 
   # 首页第二图层，可形成视差效果
-  banner_img_l2: /potato-resources/resources/bg_l2.webp
+  banner_img_l2: /resources/pictures/bg_l2.webp
 
   # 头图高度，屏幕百分比
   # Height ratio of banner image
@@ -622,13 +622,13 @@ index:
 # Post Page
 #---------------------------
 post:
-  banner_img: /potato-resources/resources/banner_default.webp
+  banner_img: /resources/pictures/banner_default.webp
   banner_img_height: 70
   banner_mask_alpha: 0.3
 
   # 文章在首页的默认封面图，当没有指定 index_img 时会使用该图片，若两者都为空则不显示任何图片
   # Path of the default post cover when `index_img` is not set. If both are empty, no image will be displayed
-  default_index_img: /potato-resources/resources/cover_default.webp
+  default_index_img: /resources/pictures/cover_default.webp
 
   # 文章标题下方的元信息
   # Meta information below title
@@ -975,7 +975,7 @@ giscus:
 # Archive Page
 #---------------------------
 archive:
-  banner_img: /potato-resources/resources/bg_归档.webp
+  banner_img: /resources/pictures/bg_归档.webp
   banner_img_height: 75
   banner_mask_alpha: 0.3
 
@@ -985,7 +985,7 @@ archive:
 #---------------------------
 category:
   enable: true
-  banner_img: /potato-resources/resources/bg_分类.webp
+  banner_img: /resources/pictures/bg_分类.webp
   banner_img_height: 75
   banner_mask_alpha: 0.3
 
@@ -1013,7 +1013,7 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: /potato-resources/resources/bg_标签.webp
+  banner_img: /resources/pictures/bg_标签.webp
   banner_img_height: 75
   banner_mask_alpha: 0.3
   tagcloud:
@@ -1029,12 +1029,12 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: /potato-resources/resources/bg_about.webp
+  banner_img: /resources/pictures/bg_about.webp
   banner_img_height: 75
   banner_mask_alpha: 0.3
-  avatar: /potato-resources/resources/avatar.webp
+  avatar: /resources/pictures/avatar.webp
   name: "RLt"
-  intro: "带学生 | 数码爱好者 | 深色即是正义 | 学习中 Coder | 业余摄影 | 视频创作 | 东方厨"
+  intro: "平面设计师 | 个人开发者 | 摄影爱好者 | 东方厨 | 音游吃 | 深色即是正义"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, The icon is no longer a link, but a hovering QR code
   icons:
@@ -1071,7 +1071,7 @@ about:
 # Custom Page through `hexo new page`
 #---------------------------
 page:
-  banner_img: /potato-resources/resources/bg.webp
+  banner_img: /resources/pictures/bg.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -1081,7 +1081,7 @@ page:
 #---------------------------
 page404:
   enable: true
-  banner_img: /potato-resources/resources/bg_404.webp
+  banner_img: /resources/pictures/bg_404.webp
   banner_img_height: 100
   banner_mask_alpha: 0.3
   # 重定向到首页的延迟(毫秒)
@@ -1094,7 +1094,7 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /potato-resources/resources/bg_links.webp
+  banner_img: /resources/pictures/bg_links.webp
   banner_img_height: 75
   banner_mask_alpha: 0.3
   # 友链的成员项
@@ -1104,19 +1104,19 @@ links:
         title: "University Of Fool",
         intro: "愚笨大学博客站",
         link: "https://uof.edu.kg/",
-        avatar: "/potato-resources/resources/links_uof.webp",
+        avatar: "/resources/pictures/links_uof.webp",
       }
     - {
         title: "Faraway Ash",
         intro: "<strike>可爱的</strike> Lingrottin 的博客",
         link: "https://enita.cn/",
-        avatar: "/potato-resources/resources/links_fa.webp",
+        avatar: "/resources/pictures/links_fa.webp",
       }
     - {
         title: "UrsusFeline",
         intro: "<strike>最可爱的</strike> UrsusFeline 的博客",
         link: "http://blog.rosmontis.moe/",
-        avatar: "/potato-resources/resources/links_ursus.ico",
+        avatar: "/resources/pictures/links_ursus.ico",
       }
     - {
         title: "W1ndysの小屋",
@@ -1139,7 +1139,7 @@ links:
 
   # 当成员头像加载失败时，替换为指定图片
   # When the member avatar fails to load, replace the specified image
-  onerror_avatar: /potato-resources/resources/fluid.png
+  onerror_avatar: /resources/pictures/fluid.png
 
   # 友链下方自定义区域，支持 HTML，可插入例如申请友链的文字
   # Custom content at the bottom of the links
