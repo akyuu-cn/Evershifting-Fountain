@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head><!-- hexo injector head_begin start --><script src="/resources/live2d/autoload.js"></script><script type="module" src="/resources/js/devtools_detect.js"></script><!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/resources/pictures/evershifting_fountain.png">
+  <link rel="icon" href="/resources/pictures/evershifting_fountain.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#FF7340">
+  <meta name="author" content="RLt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="为街机音游 ONGEKI&#x2F;音击 制作了手台，基于 NAGEKI MICRO 方案，写下这篇文章记录一下自己的制作流程与踩的一些坑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ONGEKI&#x2F;音击 自制手台记录">
+<meta property="og:url" content="https://blog.akyuu.cn/post/23112201/index.html">
+<meta property="og:site_name" content="Evershifting Fountain">
+<meta property="og:description" content="为街机音游 ONGEKI&#x2F;音击 制作了手台，基于 NAGEKI MICRO 方案，写下这篇文章记录一下自己的制作流程与踩的一些坑。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akyuu.cn/resources/blog/23112201/3.webp">
+<meta property="article:published_time" content="2023-11-22T05:46:00.000Z">
+<meta property="article:modified_time" content="2024-12-28T18:46:36.309Z">
+<meta property="article:author" content="RLt">
+<meta property="article:tag" content="开发">
+<meta property="article:tag" content="DIY">
+<meta property="article:tag" content="MUG">
+<meta property="article:tag" content="ONGEKI">
+<meta property="article:tag" content="手台">
+<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="Arduino">
+<meta property="article:tag" content="ProMicro">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.akyuu.cn/resources/blog/23112201/3.webp">
+  
+  
+  
+  
+    
+    
+  <title>ONGEKI/音击 自制手台记录 - Evershifting Fountain</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/resources/css/fontawsome.all.min.css">
+<link rel="stylesheet" href="/resources/css/font.css">
+<link rel="stylesheet" href="/resources/css/navbar.css">
+<link rel="stylesheet" href="/resources/css/codeblock.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.akyuu.cn","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false,"scope":["home"],"autoInsertCss":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"#"},"progressbar":{"enable":false,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":2},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"0e3f147047e2b25b1049190c971b4d09","google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?0e3f147047e2b25b1049190c971b4d09";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <div class="navbar-brand">
+        
+	<img class="navbar-logo" src="/resources/pictures/evershifting_fountain.png" srcset="/img/loading.gif" lazyload />
+	
+        <strong>Evershifting Fountain | 万象泉</strong>
+      </div>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://akyuu.cn/" target="_self">
+                <i class="iconfont icon-bookmark-fill"></i>
+                <span>主站</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+
+<div id="banner" class="banner" parallax=true>
+  <div class="full-bg-img text-center">
+  
+
+  
+
+     
+    <div class="jparallax-layer" 
+      style="background-image: url('/resources/blog/23112201/banner.webp');height:100%; width:100%;"></div>
+      
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="banner-text text-center fade-in-up">
+            <div class="h2">
+              
+                <span id="subtitle">ONGEKI/音击 自制手台记录</span>
+              
+
+            </div>
+            
+              
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        RLt
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-22 13:46" pubdate>
+          2023年11月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+            
+          </div>
+          
+      
+        </div>
+      </div>
+  
+
+</div>
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ONGEKI/音击 自制手台记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>NAGEKI MICRO 方案使用了六个<code>33*33mm主键</code>与两个<code>60*60mm方形侧键</code>，这一按键配置与官机有较大区别。虽然目前已经有一些比较成熟的高仿官机开源手台方案，如 <a target="_blank" rel="noopener" href="https://github.com/Umi4Life/NAGEKI-3.33">Umi4Life&#x2F;NAGEKI-3.33</a>，但由于成本过高与制作难度较大，对于初心者来说并不友好。</p>
+<p><img src="/../resources/blog/23112201/3.webp" srcset="/img/loading.gif" lazyload></p>
+<p>虽然本文所使用的方案并不能完全还原官机手感，但非常适合想体验音击但预算不足的玩家。经过我自己的测试，在组件恰当固定的前提下，完全能打高难度的谱面。当然，如果你追求完全还原官机的手感，建议还是考虑其他方案。</p>
+<p><strong>需要注意的是，我对 NAGEKI 方案做了很多调整来保证最佳效果，因此不建议同时参考两篇教程。</strong></p>
+<h1 id="前提准备"><a href="#前提准备" class="headerlink" title="前提准备"></a>前提准备</h1><p>你需要拥有一定的<strong>动手能力</strong>、<strong>编程基础</strong>和<strong>基础焊接技能</strong>，同时也需要拥有对应的工具。</p>
+<p>此外，你需要自行配置 ONGEKI 游戏本体，请自行寻找教程，本文此处不再赘述。</p>
+<h1 id="材料列表"><a href="#材料列表" class="headerlink" title="材料列表"></a>材料列表</h1><p>如果你只追求游玩体验，那么只需要考虑必选的材料。如果你对手台的外观等方面有一定要求，可以看看可选材料。</p>
+<h2 id="必须"><a href="#必须" class="headerlink" title="必须"></a>必须</h2><ul>
+<li>PVC材质 NAGEKI MICRO 外壳（TB多美歌）（150CNY）</li>
+<li>100mm不锈钢杆 直径6mm（~5CNY）</li>
+<li>200mm不锈钢杆 直径4mm（~6CNY）</li>
+<li>ProMicro 5V（~35CNY）</li>
+<li>1*4P直排针*50（~3CNY）</li>
+<li>NAGEKI PCB（嘉立创免费打样）</li>
+<li>33*33按键*8、60*60按键*2（~95CNY）</li>
+<li>微动开关*10（~35CNY）</li>
+<li>轻按键弹簧*8（~20CNY）</li>
+<li>机械键盘润轴油脂+笔（~7CNY）</li>
+<li>机床操作杆 M6*110mm（~4CNY）</li>
+<li>各种杜邦线（公公、母母、公母）（~10CNY）</li>
+<li>鳄鱼夹杜邦线*20（公转鳄鱼夹）（~10CNY）</li>
+<li>6mm六角联轴器 30mm长度（~5CNY）</li>
+<li>刚性联轴器 外径20 长25 内孔6*6（~5CNY）</li>
+<li>止动环 内径24 M6（~3CNY）</li>
+<li>单联电位器 B10K 20mm（~3CNY）</li>
+<li>T型硅胶护线圈 内径22（~5CNY）</li>
+<li>PVC胶水（~5CNY）</li>
+</ul>
+<p><strong>总价约为400CNY</strong></p>
+<h2 id="可选"><a href="#可选" class="headerlink" title="可选"></a>可选</h2><h3 id="改善手台线路"><a href="#改善手台线路" class="headerlink" title="改善手台线路"></a>改善手台线路</h3><blockquote>
+<p>由于该外壳开孔偏小，必须使用扁线才能穿孔，<br>当然你也可以自己把孔扩大一些。</p>
+</blockquote>
+<ul>
+<li>TYPE-C 扁线</li>
+</ul>
+<p><img src="/../resources/blog/23112201/4.webp" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../resources/blog/23112201/5.webp" srcset="/img/loading.gif" lazyload></p>
+<h3 id="可拆卸底板"><a href="#可拆卸底板" class="headerlink" title="可拆卸底板"></a>可拆卸底板</h3><blockquote>
+<p>不建议直接把底板固定上去，用柜门磁吸片更便于维护。</p>
+</blockquote>
+<ul>
+<li>柜门磁吸片</li>
+</ul>
+<h3 id="按键灯光"><a href="#按键灯光" class="headerlink" title="按键灯光"></a>按键灯光</h3><blockquote>
+<p>单色灯光比较省事，当然你也可以自己捣鼓一下游戏灯光同步。</p>
+</blockquote>
+<ul>
+<li>5V LED</li>
+<li>鳄鱼夹杜邦线</li>
+</ul>
+<h1 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h1><h2 id="NAGEKI-PCB"><a href="#NAGEKI-PCB" class="headerlink" title="NAGEKI PCB"></a>NAGEKI PCB</h2><p><a target="_blank" rel="noopener" href="https://github.com/Nana0Nana/NAGEKI/blob/main/NAGEKI%20PCB%20V2.zip">NAGEKI PCB V2.zip</a> </p>
+<blockquote>
+<p>链接已失效，补档见文末  </p>
+</blockquote>
+<p>在此下载 PCB 制板文件，直接上传至嘉立创并下单即可。</p>
+<h2 id="按键弹簧的购买"><a href="#按键弹簧的购买" class="headerlink" title="按键弹簧的购买"></a>按键弹簧的购买</h2><p>由于音游的操作密度比较大，强烈建议选择力度较轻的弹簧，可以自行咨询店家。</p>
+<h2 id="开发板排针问题"><a href="#开发板排针问题" class="headerlink" title="开发板排针问题"></a>开发板排针问题</h2><p>有些 ProMicro 开发板会在底部多一排排针，但 NAGEKI PCB 上并没有为这排排针预留孔位，因此建议买未焊排针的开发板，自行焊接所需的排针。<br><img src="/../resources/blog/23112201/11.webp" srcset="/img/loading.gif" lazyload></p>
+<h1 id="组装流程"><a href="#组装流程" class="headerlink" title="组装流程"></a>组装流程</h1><p>在拿到大部分材料后，就可以开始着手组装了。</p>
+<h2 id="1-搭建外壳"><a href="#1-搭建外壳" class="headerlink" title="1.搭建外壳"></a>1.搭建外壳</h2><p><img src="/../resources/blog/23112201/12.webp" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../resources/blog/23112201/10.webp" srcset="/img/loading.gif" lazyload></p>
+<p>你可以选择使用 PVC 胶水粘合，也可以选择用自攻螺丝固定。如果要使用自攻螺丝，建议打孔后再上螺丝，避免损伤 PVC 外壳。</p>
+<p>由于 PVC 胶水对该材质的粘性已经够强，此处我直接使用了这个比较省事的固定方案。</p>
+<p>顶层彩印亚克力板无需自行固定，在安装按键后就会固定住。底板可以先不固定，便于处理内部线路。</p>
+<h2 id="2-安装按键"><a href="#2-安装按键" class="headerlink" title="2.安装按键"></a>2.安装按键</h2><p>在安装前，建议先用机械键盘润轴油脂润滑一下，保证手感。</p>
+<p>润滑完毕后，安装微动开关。对准两个短柱，将微动开关卡上去。</p>
+<p>随后就可以把按键安装到外壳上了。</p>
+<h2 id="3-焊接开发板"><a href="#3-焊接开发板" class="headerlink" title="3.焊接开发板"></a>3.焊接开发板</h2><p>焊接排针、开发板与 NAGEKI PCB。</p>
+<h2 id="4-焊接电位器"><a href="#4-焊接电位器" class="headerlink" title="4.焊接电位器"></a>4.焊接电位器</h2><p>电位器有三个引脚，分别是 VCC、GND、模拟信号。由于杜邦线难以连接到电位器上，我将三根母对母杜邦线的一头剪开，并焊接到了电位器上，另一侧插到 PCB 上。</p>
+<p><img src="/../resources/blog/23112201/9.webp" srcset="/img/loading.gif" lazyload></p>
+<p>位于电位器两侧的引脚为VCC&#x2F;GND，中间的引脚为模拟信号，接入 PCB 上的 A0 口。</p>
+<h2 id="5-摇杆组装"><a href="#5-摇杆组装" class="headerlink" title="5.摇杆组装"></a>5.摇杆组装</h2><p>整个摇杆的结构：</p>
+<p><img src="/../resources/blog/23112201/2.webp" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/../resources/blog/23112201/7.webp" srcset="/img/loading.gif" lazyload></p>
+<p>使用 2 根 200mm*4mm 不锈钢杆作为摇杆限位杆，直接穿入孔内即可。请务必将各个止动螺丝固定牢固，否则可能会产生摇杆漂移等问题。</p>
+<p>由于这个台子比较小，我没有找到合适的固定方案，我使用了多层纸板+热熔胶固定，由于纸板纵向强度较强，结构稳定度还算可以。</p>
+<h2 id="6-接线"><a href="#6-接线" class="headerlink" title="6.接线"></a>6.接线</h2><p>根据 PCB 上的印刷文本提示，将微动开关连接到 PCB 上（GND 和 IO 分别连接到微动开关的两个引脚）<br><img src="/../resources/blog/23112201/1.webp" srcset="/img/loading.gif" lazyload><br><img src="/../resources/blog/23112201/6.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="7-烧写软件"><a href="#7-烧写软件" class="headerlink" title="7.烧写软件"></a>7.烧写软件</h2><p>将 <a target="_blank" rel="noopener" href="https://github.com/Nana0Nana/ongeki-io/tree/develop/mu3hid">ongeki-io</a> 固件烧写到开发板上，Arduino IDE 的配置在此不再赘述。如果开发版亮绿灯，则固件正常运行。</p>
+<p>最后，如果你没有外接 AIME 读卡器，你需要将卡号写入固件内。以下是示例代码：</p>
+<blockquote>
+<p>你可以用这个 AIME 卡号生成器小工具来快速生成卡号及其数组：<br><a target="_blank" rel="noopener" href="https://utils.akyuu.cn/utils/aime-generator">PotatoUtils&#x2F;aime-generator</a></p>
+</blockquote>
+<figure><div class="code-wrapper"><pre class="line-numbers language-C" data-language="C"><code class="language-C">if(data-&gt;buttons[4] &amp;&amp; data-&gt;buttons[9]) &#123;
+    &#x2F;&#x2F; 假设你的卡号是：66 14 22 53 21 60 74 99 33 11
+    &#x2F;&#x2F; 则你需要将其转为十进制写入 aimi_id 中，如下：
+    data-&gt;aimi_id &#x3D; &#123;102,20,34,83,33,96,116,153,51,17&#125;;
+    data-&gt;scan &#x3D; true;
+&#125;</code></pre></div></figure>
+
+<h2 id="8-修改游戏-dll"><a href="#8-修改游戏-dll" class="headerlink" title="8.修改游戏 dll"></a>8.修改游戏 dll</h2><p>按照 <a target="_blank" rel="noopener" href="https://github.com/Nana0Nana/ongeki-io/blob/develop/README.md">ongeki-io&#x2F;README.md</a> 操作即可。</p>
+<h2 id="9-启动游戏！"><a href="#9-启动游戏！" class="headerlink" title="9.启动游戏！"></a>9.启动游戏！</h2><p>如果你正确替换了 dll，游戏在启动时会弹出 NAGEKI 的界面，你可以在这个界面上测试你的所有手台功能。</p>
+<p>如果你发现你的摇杆方向反了，将电位器上的 VCC 和 GND 反接即可。</p>
+<p>之后，进入游戏 test 模式并校准摇杆，最后回到 service 模式，<strong>按住</strong>两个menu刷卡。如果一切顺利的话，你就能正常游玩了。</p>
+<h2 id="10-更多的优化…"><a href="#10-更多的优化…" class="headerlink" title="10.更多的优化…"></a>10.更多的优化…</h2><p>由于摇杆使用了电位器，其信号输入为模拟信号，因此难免产生数据抖动。我在固件内加入了滞后滤波算法来实现平滑，你也可以自行修改固件来实现类似的效果。</p>
+<h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><h3 id="Q-我的左右侧键是常开的-会乱跳？"><a href="#Q-我的左右侧键是常开的-会乱跳？" class="headerlink" title="Q: 我的左右侧键是常开的&#x2F;会乱跳？"></a>Q: 我的左右侧键是常开的&#x2F;会乱跳？</h3><p>A: 由于固件默认是反转左右侧键的状态的，所以导致了这个问题。你有两个选择：  </p>
+<ol>
+<li>如果你的微动是三脚的，那么就换一种接法（常闭引脚换成常开引脚）  </li>
+<li>修改固件，如下：  <figure><div class="code-wrapper"><pre class="line-numbers language-C" data-language="C"><code class="language-C">for(auto i &#x3D; 0; i &lt; 10; i++) &#123;
+    data-&gt;buttons[i] &#x3D; digitalRead(PIN_MAP[i]) &#x3D;&#x3D; LOW;
+&#125;</code></pre></div></figure></li>
+</ol>
+<h1 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h1><p>如果你还有其他本文未提及的问题，可以直接来问我。你可以加 <code>QQ2114085565</code> 或发邮件到 <code>ltfjx2333@gmail.com</code>。  </p>
+<p><strong>祝玩的开心:D</strong></p>
+<h1 id="后记-NAGEKI-仓库备份"><a href="#后记-NAGEKI-仓库备份" class="headerlink" title="后记 - NAGEKI 仓库备份"></a>后记 - NAGEKI 仓库备份</h1><p>NAGEKI 原仓库出于某些原因被删除了，在此为了方便各位使用，我上传了一份备份，如有不妥请联系我进行删除。</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.akyuu.cn/s/YDfZ">NAGEKI-main</a><br><a target="_blank" rel="noopener" href="https://cloud.akyuu.cn/s/d1i7">ongeki-io-develop</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9C%88%E5%8D%8E/" class="category-chain-item">月华</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BC%80%E5%8F%91/" class="print-no-link">#开发</a>
+      
+        <a href="/tags/DIY/" class="print-no-link">#DIY</a>
+      
+        <a href="/tags/MUG/" class="print-no-link">#MUG</a>
+      
+        <a href="/tags/ONGEKI/" class="print-no-link">#ONGEKI</a>
+      
+        <a href="/tags/%E6%89%8B%E5%8F%B0/" class="print-no-link">#手台</a>
+      
+        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" class="print-no-link">#嵌入式</a>
+      
+        <a href="/tags/Arduino/" class="print-no-link">#Arduino</a>
+      
+        <a href="/tags/ProMicro/" class="print-no-link">#ProMicro</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ONGEKI/音击 自制手台记录</div>
+      <div>https://blog.akyuu.cn/post/23112201/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>RLt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/23060501/" title="舞萌 DX 2023 彩框留念">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">舞萌 DX 2023 彩框留念</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/23030401/" title="摄影随拍 - 城市里的追光逐影">
+                        <span class="hidden-mobile">摄影随拍 - 城市里的追光逐影</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="SOHUCS" sid='https://blog.akyuu.cn/post/23112201/'></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#SOHUCS', function() {
+      Fluid.utils.createScript("https://changyan.sohu.com/upload/changyan.js", function() {
+        window.changyan.api.config({"appid":"cyviBJgu4","appkey":"7f071327ea88e6bbca9af55333a19c23"})
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <div style='font-size: 1.15rem;font-weight: bold;'>
+  <a href='https://hexo.io' target='_blank' rel='nofollow noopener'><span>Hexo</span></a>
+  <i class='iconfont icon-love'></i>
+  <a href='https://github.com/akyuu-cn/hexo-theme-fluid-EF' target='_blank' rel='nofollow noopener'><span>Fluid</span></a>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.5rem;opacity: 0.5'>
+  <span id='timeDate'>...</span>
+  <span id='times'>...</span>
+  <script src='/resources/js/site_duration.js'></script>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.1rem;margin-bottom: 1.5rem;opacity: 0.25'>
+  <span> - 冷た過ぎる春の雪 何を終わらせ始める - </span>
+</div>
+
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/autoloader/prism-autoloader.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script type="text/javascript" src="/js/jquery.parallax.js"></script>
+<script type="text/javascript">var firstScroll=false;
+var mobile=(function(){
+    var info = navigator.userAgent
+    var isPhone = /mobile/i.test(info)
+    return isPhone
+})();
+$(window).resize(function () { 
+    if(!mobile){
+        var element=$('.jparallax-layer');
+        element.unparallax();
+        element.css('top', 'auto');
+        element.css('margin-top', 'auto');
+        element.css('left', 'auto');
+        element.css('margin-left', 'auto');
+        element.parallax({} , { });
+    }
+});
+// 因为 banner 的位置本就在 import_script 函数注入的 HTML 代码之前
+// 所以这里不用 $(window).load。
+if(!mobile){
+    $('.jparallax-layer').parallax({} , { });
+}</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/resources/js/potato_ef_patch.js"></script><!-- hexo injector body_end end --></body>
+</html>

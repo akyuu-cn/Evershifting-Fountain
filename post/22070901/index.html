@@ -1,0 +1,871 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head><!-- hexo injector head_begin start --><script src="/resources/live2d/autoload.js"></script><script type="module" src="/resources/js/devtools_detect.js"></script><!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/resources/pictures/evershifting_fountain.png">
+  <link rel="icon" href="/resources/pictures/evershifting_fountain.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#FF7340">
+  <meta name="author" content="RLt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="借助 Github Actions 自动化 Hexo 博客的部署过程，并分发到 Pages &#x2F; 个人服务器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 Github Actions 实现 Hexo 自动部署">
+<meta property="og:url" content="https://blog.akyuu.cn/post/22070901/index.html">
+<meta property="og:site_name" content="Evershifting Fountain">
+<meta property="og:description" content="借助 Github Actions 自动化 Hexo 博客的部署过程，并分发到 Pages &#x2F; 个人服务器。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akyuu.cn/resources/blog/22070901/cover.webp">
+<meta property="article:published_time" content="2022-07-08T16:04:15.000Z">
+<meta property="article:modified_time" content="2024-12-28T18:46:36.309Z">
+<meta property="article:author" content="RLt">
+<meta property="article:tag" content="网站">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Github">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="Github Actions">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.akyuu.cn/resources/blog/22070901/cover.webp">
+  
+  
+  
+  
+    
+    
+  <title>使用 Github Actions 实现 Hexo 自动部署 - Evershifting Fountain</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/resources/css/fontawsome.all.min.css">
+<link rel="stylesheet" href="/resources/css/font.css">
+<link rel="stylesheet" href="/resources/css/navbar.css">
+<link rel="stylesheet" href="/resources/css/codeblock.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.akyuu.cn","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false,"scope":["home"],"autoInsertCss":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"#"},"progressbar":{"enable":false,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":2},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"0e3f147047e2b25b1049190c971b4d09","google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?0e3f147047e2b25b1049190c971b4d09";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <div class="navbar-brand">
+        
+	<img class="navbar-logo" src="/resources/pictures/evershifting_fountain.png" srcset="/img/loading.gif" lazyload />
+	
+        <strong>Evershifting Fountain | 万象泉</strong>
+      </div>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://akyuu.cn/" target="_self">
+                <i class="iconfont icon-bookmark-fill"></i>
+                <span>主站</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+
+<div id="banner" class="banner" parallax=true>
+  <div class="full-bg-img text-center">
+  
+
+  
+
+     
+    <div class="jparallax-layer" 
+      style="background-image: url('/resources/blog/22070901/banner.webp');height:100%; width:100%;"></div>
+      
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="banner-text text-center fade-in-up">
+            <div class="h2">
+              
+                <span id="subtitle">使用 Github Actions 实现 Hexo 自动部署</span>
+              
+
+            </div>
+            
+              
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        RLt
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-09 00:04" pubdate>
+          2022年7月9日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          771 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+            
+          </div>
+          
+      
+        </div>
+      </div>
+  
+
+</div>
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">使用 Github Actions 实现 Hexo 自动部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>看到这个标题，你可能会说：我本地生成静态文件了之后再手动上传不是很方便嘛，何必要折腾这么复杂的方法呢？</p>
+<p>但是对我来说，用这套方案还是有很多好处的。</p>
+<ul>
+<li>源文件云端备份到 Github，丢失概率低</li>
+<li>自动进行双端部署（Pages + 服务器），特别是部署到服务器会方便很多</li>
+<li>随时随地，没有电脑也能修改博客内容</li>
+<li>…</li>
+</ul>
+<p>所以就来试试看吧，反正 Actions 不要钱（？</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>首先我们需要了解 Github Actions 的工作原理。</p>
+<p>Github Actions 本质上就是给你提供了一台虚拟服务器，你可以编写一种特殊的脚本来指定这台服务器干些什么。</p>
+<p>我们需要让这台服务器先克隆博客源码的仓库，随后配置 Hexo 运行环境，之后生成静态博客文件，最后发布到 Pages 或推送到我们自己的服务器。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h3 id="1-新建仓库并上传源码"><a href="#1-新建仓库并上传源码" class="headerlink" title="1. 新建仓库并上传源码"></a>1. 新建仓库并上传源码</h3><p>没什么好说的，把你的博客源文件传上去就好了。</p>
+<h3 id="2-配置-Workflow"><a href="#2-配置-Workflow" class="headerlink" title="2. 配置 Workflow"></a>2. 配置 Workflow</h3><p>新建一个 Workflow，并粘贴下面的代码：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">name: Hexo Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  hexo-deployment:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia&#x2F;Shanghai
+
+    steps:
+    - name: Checkout source
+      uses: actions&#x2F;checkout@v2
+      with:
+        submodules: true
+
+    - name: Setup Node.js
+      uses: actions&#x2F;setup-node@v1
+      with:
+        node-version: &#39;16.15.1&#39;
+
+    - name: Install dependencies &amp; Generate static files
+      run: |
+        npm i --location&#x3D;global hexo-cli
+        npm i
+        hexo clean
+        hexo g
+        
+    - name: Deploy to Github Pages
+      env:
+        GIT_NAME: （用户名）
+        GIT_EMAIL: （邮箱）
+        REPO: （仓库地址，如 github.com&#x2F;akyuu-cn&#x2F;evershifting-fountain）
+        GH_TOKEN: $&#123;&#123; secrets.GH_TOKEN &#125;&#125;
+      run: |
+        cd .&#x2F;public &amp;&amp; git init &amp;&amp; git add .
+        git config --global user.name $GIT_NAME
+        git config --global user.email $GIT_EMAIL
+        git commit -m &quot;Site deployed by GitHub Actions&quot;
+        git push --force --quiet &quot;https:&#x2F;&#x2F;$GH_TOKEN@$REPO&quot; master:pages
+</code></pre></div></figure>
+
+<p><strong>注意：Deploy to Github Pages 步骤中有需要自行修改的内容。</strong></p>
+<h3 id="3-配置-Secrets"><a href="#3-配置-Secrets" class="headerlink" title="3. 配置 Secrets"></a>3. 配置 Secrets</h3><p>打开 Github 用户设置 <code>Developer settings</code> - <code>Personal access tokens</code>，点击 <code>Generate new token</code>，<code>Expiration</code> 选择 <code>no expiration</code>（永不过期），下方勾选 repo 所有权限，然后点击 <code>Generate token</code>。</p>
+<p><img src="/resources/blog/22070901/image-20220715020723669.png" srcset="/img/loading.gif" lazyload></p>
+<p>把 token 复制下来。</p>
+<p><img src="/resources/blog/22070901/image-20220715020800565.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开仓库 <code>Settings</code> - <code>Secrets</code> - <code>Actions</code>，点击 <code>New repository secret</code>， <code>Name</code> 填 <code>GH_TOKEN</code>，然后把刚才复制下来的 token 粘贴到 <code>Value</code> 中。</p>
+<p><img src="/resources/blog/22070901/image-20220715020849862.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-尝试-Commit"><a href="#4-尝试-Commit" class="headerlink" title="4. 尝试 Commit"></a>4. 尝试 Commit</h3><p>任意修改一个文件并提交，理论上博客就会自动被构建并发布到 pages 分支了。</p>
+<p><img src="/resources/blog/22070901/image-20220715021210613.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-配置-Github-Pages"><a href="#5-配置-Github-Pages" class="headerlink" title="5. 配置 Github Pages"></a>5. 配置 Github Pages</h3><p>点击仓库 <code>Settings</code> - <code>Pages</code>，<code>Source</code> 中 <code>Branch</code> 选择 pages，并填写自定义域名，启用 https。（此处省略 Pages 配置过程）</p>
+<p><img src="/resources/blog/22070901/image-20220715021433391.png" srcset="/img/loading.gif" lazyload></p>
+<p>这时候打开 Pages 发布的网站，可以顺利访问了。</p>
+<h3 id="EX-发布到个人服务器"><a href="#EX-发布到个人服务器" class="headerlink" title="EX. 发布到个人服务器"></a>EX. 发布到个人服务器</h3><p>这里采用了 Rsync，保证在博客规模较大的时候也能在短时间内完成部署。在 Actions 脚本的最后加入：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">- name: Deploy to server
+  uses: easingthemes&#x2F;ssh-deploy@v2.2.11
+  env:
+    SSH_PRIVATE_KEY: &#39;$&#123;&#123; secrets.SSH_PRIVATE_KEY &#125;&#125;&#39;
+    ARGS: &quot;-avz --delete&quot;
+    SOURCE: &quot;public&#x2F;&quot;
+    REMOTE_HOST: &#39;$&#123;&#123; secrets.SERVER_IP &#125;&#125;&#39;
+    REMOTE_USER: &#39;root&#39;
+    TARGET: &#39;（你的网站根目录，如 &#x2F;www&#x2F;wwwroot&#x2F;akyuu-cn）&#39;</code></pre></div></figure>
+
+<p><strong>注意：TARGET 中的内容需要修改为你自己的。</strong></p>
+<p>新建以下 Secrets：</p>
+<ul>
+<li><code>SSH_PRIVATE_KEY</code> - 用于连接服务器的 SSH KEY</li>
+<li><code>SERVER_IP</code> - 你的服务器 IP</li>
+</ul>
+<p>然后进行一次 Commit，生成好的文件就会自动被上传到服务器网站根目录了。</p>
+<h1 id="如果遇到错误…"><a href="#如果遇到错误…" class="headerlink" title="如果遇到错误…"></a>如果遇到错误…</h1><p>自己去 Actions 里看日志啦（被打</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%85%B1%E6%8C%AF/" class="category-chain-item">共振</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BD%91%E7%AB%99/" class="print-no-link">#网站</a>
+      
+        <a href="/tags/%E5%8D%9A%E5%AE%A2/" class="print-no-link">#博客</a>
+      
+        <a href="/tags/Hexo/" class="print-no-link">#Hexo</a>
+      
+        <a href="/tags/Github/" class="print-no-link">#Github</a>
+      
+        <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="print-no-link">#服务器</a>
+      
+        <a href="/tags/Github-Actions/" class="print-no-link">#Github Actions</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>使用 Github Actions 实现 Hexo 自动部署</div>
+      <div>https://blog.akyuu.cn/post/22070901/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>RLt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/22071301/" title="通过 JavaScript 使 Hexo 分类页根据指定顺序排序">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">通过 JavaScript 使 Hexo 分类页根据指定顺序排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/22062701/" title="小米手表体验心得：学生党的第一块智能手表？">
+                        <span class="hidden-mobile">小米手表体验心得：学生党的第一块智能手表？</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="SOHUCS" sid='https://blog.akyuu.cn/post/22070901/'></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#SOHUCS', function() {
+      Fluid.utils.createScript("https://changyan.sohu.com/upload/changyan.js", function() {
+        window.changyan.api.config({"appid":"cyviBJgu4","appkey":"7f071327ea88e6bbca9af55333a19c23"})
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <div style='font-size: 1.15rem;font-weight: bold;'>
+  <a href='https://hexo.io' target='_blank' rel='nofollow noopener'><span>Hexo</span></a>
+  <i class='iconfont icon-love'></i>
+  <a href='https://github.com/akyuu-cn/hexo-theme-fluid-EF' target='_blank' rel='nofollow noopener'><span>Fluid</span></a>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.5rem;opacity: 0.5'>
+  <span id='timeDate'>...</span>
+  <span id='times'>...</span>
+  <script src='/resources/js/site_duration.js'></script>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.1rem;margin-bottom: 1.5rem;opacity: 0.25'>
+  <span> - 冷た過ぎる春の雪 何を終わらせ始める - </span>
+</div>
+
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/autoloader/prism-autoloader.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script type="text/javascript" src="/js/jquery.parallax.js"></script>
+<script type="text/javascript">var firstScroll=false;
+var mobile=(function(){
+    var info = navigator.userAgent
+    var isPhone = /mobile/i.test(info)
+    return isPhone
+})();
+$(window).resize(function () { 
+    if(!mobile){
+        var element=$('.jparallax-layer');
+        element.unparallax();
+        element.css('top', 'auto');
+        element.css('margin-top', 'auto');
+        element.css('left', 'auto');
+        element.css('margin-left', 'auto');
+        element.parallax({} , { });
+    }
+});
+// 因为 banner 的位置本就在 import_script 函数注入的 HTML 代码之前
+// 所以这里不用 $(window).load。
+if(!mobile){
+    $('.jparallax-layer').parallax({} , { });
+}</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/resources/js/potato_ef_patch.js"></script><!-- hexo injector body_end end --></body>
+</html>

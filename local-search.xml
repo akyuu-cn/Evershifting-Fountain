@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>服务器硬盘 · 卒 - Yoiyami-v3 维修记录</title>
+    <link href="/post/24121201/"/>
+    <url>/post/24121201/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>大概在一周前，我的 Uptime Bot 突然告诉我 Web 服务出现了问题。</p><p>我单纯地以为只是一般的重启就能解决的故障，但深入分析后发现，ESXi 的行为似乎有些奇怪。我试图在 ESXi 的控制台上对机器进行断电重启，但面板完全没有反应，卡在了“操作进行中”的状态。</p><p><img src="/./resources/blog/24121201/2.webp" alt="（它甚至运行了十个小时）"></p><p>实在没有别的好办法，我就开始尝试物理重启机器，没想到问题消失了。但机器没运行多久，就又出现了先前的问题。此时我注意到了一台虚拟机上的日志输出：</p><p><img src="/./resources/blog/24121201/1.webp"></p><p>这时候我才意识到问题的严重性：硬盘坏了。</p><p>由于这个硬盘是购买这台主机时附带的硬盘，我也没怎么关注健康状态就给它装上了。说白了就是想到了会出问题，但没想到问题来得这么快（</p><h1 id="补救措施"><a href="#补救措施" class="headerlink" title="补救措施"></a>补救措施</h1><p>在我意识到硬盘损坏之后，马上选择了对主机断电。随后下单了一块新的硬盘，开始进行数据迁移。</p><p>我使用 DiskGenius 对原硬盘进行分区备份，虽然中途有出现各种问题，但好在数据最后是完整保留下来了。</p><p><img src="/./resources/blog/24121201/3.webp"></p><p>原先我的计划是，将硬盘所有分区备份，然后原样转移到新硬盘里来保证系统的正常运行。但实际情况是，如果这么做的话，第一次启动可以正常运行，但第二次启动就会出现问题，完全无法进入系统，原因未知。</p><p>所以我只能再重新装一遍系统，然后再把 vmfs 分区恢复进去。</p><p>进程很顺利，但进入系统的时候，我发现 vmfs 分区没有被正确识别。经过资料查找，要让 vmfs 分区正常识别，需要在 ESXi 上执行以下命令：</p><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">esxcli storage vmfs snapshot listesxcfg-volume -M [分区UUID]</code></pre></div></figure><p>大功告成！现在服务器又恢复正常了。</p><p><img src="/./resources/blog/24121201/4.webp"></p><h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>经历了这次对于服务器来说属于是灾难级别的故障，我意识到了以下几件事：</p><ol><li>数据备份真的非常非常重要，尤其是重要的数据</li><li>如果出现了系统完全没有响应之类的问题，记得检查一下硬盘</li><li>不要用来路不明的硬盘</li></ol><p>后来我用工具查看了一下这块硬盘，发现这块盘是真的很野：</p><p><img src="/./resources/blog/24121201/5.webp"></p><p>通电次数，读取写入都低的离谱，温度明显没有 52 度但是显示 52 度，大概率是固件被魔改的硬盘。为了你的数据安全考虑，千万不要用这类硬盘存数据，我已经踩过坑了 :(</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>服务器</tag>
+      
+      <tag>运维</tag>
+      
+      <tag>ESXi</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>硬盘</tag>
+      
+      <tag>硬件</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Yoiyami-v3 服务器搬家记录</title>
+    <link href="/post/24110201/"/>
+    <url>/post/24110201/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>Yoiyami-v2 的服务器很快就要过期了，位于阿里云的新加坡机房。在前 12 个月的使用周期里，我对这个服务器有着这些不满意的地方：</p><ul><li><p><strong>网络线路</strong><br> 这个服务器的网络线路比较差，国内访问速度和质量并不理想，导致虽然有高带宽但根本跑不到很高的速度。</p></li><li><p><strong>配置</strong><br> CPU 性能还算够用，但 2G 的内存和 60G 硬盘实在是用起来有些吃力。</p></li><li><p><strong>最后也是对我而言最不能忍受的：价格</strong><br> 很多服务器商都以首年低价续费高价的方式进行营销，阿里云也不例外。所以我不得不每年更换服务商来降低服务器运营成本，实在是太麻烦了。</p></li></ul><p>为了一劳永逸地解决这些问题，我决定自己搭建一个低功耗、高性价比、可拓展性强、稳定的物理服务器。</p><h1 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h1><h2 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h2><p>对于家用服务器来说，低功耗、低噪音和小尺寸是很重要的，所以我最终选择了 <code>HP800G1DM</code> 作为服务器的准系统。</p><p><img src="/./resources/blog/24110201/10.webp"></p><p>接下来是 CPU，我选择了 4 核心，TDP 为 35W 的 <code>i5-4590T</code>，作为以提供 web 服务为主的服务器来说性能完全足够，且足够节能。</p><p>内存方面，我选择了 <code>8+8G</code> 的配置，比之前的服务器有了很大的提升。</p><p><img src="/./resources/blog/24110201/11.webp"></p><p>由于短期内没有对大容量存储的需求，我暂时只选择了一块 <code>120G</code> 的 SSD 作为系统盘。</p><h2 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h2><p>由于除了用于提供各种 web 服务的 linux 系统之外，我还希望能有一个 Windows 系统运行一些脚本等，所以我选择了 <code>VMware ESXi</code> 作为服务器系统。</p><p><code>VMware ESXi</code> 是一个强大且灵活的虚拟化解决方案，可以轻松管理多个虚拟机，这也就意味着所有操作系统都将会运行在虚拟化环境中。通俗来讲就是把一台物理服务器分成好几台虚拟服务器。</p><p>经过资料查阅，ESXi 并不会对性能造成特别大的损失，但却可以换来更灵活的部署方式和可拓展性，对于我这样的需求来说非常合适。</p><p>关于网络方面，由于家用网络没有固定的公网 IP，所以我会选择 <code>frp</code> 作为公网通信方式。</p><h2 id="成本"><a href="#成本" class="headerlink" title="成本"></a>成本</h2><ul><li>HP800G1DM + 电源 200r</li><li>i5-4590T 100r</li><li>内存 8G*2 50r</li><li>SSD 120G 30r</li></ul><p>以上为设备购置费用，下面是固定支出：</p><ul><li>frp 服务 10r&#x2F;月</li><li>电费</li></ul><h1 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h1><h2 id="硬件测试"><a href="#硬件测试" class="headerlink" title="硬件测试"></a>硬件测试</h2><p>机器到手，先拆机安装硬件。</p><p><img src="/./resources/blog/24110201/1.webp"><br><img src="/./resources/blog/24110201/2.webp"></p><p>进 Windows 测试一下基本功能。</p><p><img src="/./resources/blog/24110201/3.webp"></p><h2 id="系统安装"><a href="#系统安装" class="headerlink" title="系统安装"></a>系统安装</h2><p>硬件测试完毕后，接下来就是安装 ESXi 系统。安装的过程比较简单，直接根据提示一步步走即可。</p><p>唯一需要注意的是，ESXi 默认会把硬盘所有空间分配给 ESXi 系统，但实际上根本不用这么大，完全可以把剩下的空间留给虚拟机，调整方式如下：</p><blockquote><p>第一次启动安装时，按 shift+o<br>在 cdromBoot runweasel 后输入 autoPartitionOSDataSize&#x3D;8192，区分大小写，单位为 MB</p></blockquote><p><img src="/./resources/blog/24110201/4.webp"><br><img src="/./resources/blog/24110201/5.webp"></p><p>安装完毕，接下来插入网线，重启进入系统。</p><p><img src="/./resources/blog/24110201/7.webp"></p><p>等待系统启动完毕后就可以在局域网环境下通过服务器的 IP 访问到 ESXi 的 web 界面了。</p><p><img src="/./resources/blog/24110201/6.webp"></p><h2 id="配置虚拟机"><a href="#配置虚拟机" class="headerlink" title="配置虚拟机"></a>配置虚拟机</h2><p>有了 web 界面之后，剩余的步骤就很简单了，根据自己的需求分配资源，安装各种虚拟机即可。</p><p><img src="/./resources/blog/24110201/8.webp"></p><p>配置虚拟机自动启动。</p><p><img src="/./resources/blog/24110201/9.webp"></p><p>关于内网网络方面，每一台虚拟机都是能够独享一个 IP 的，所以不需要额外配置，非常方便。</p><p>最后配置好 frp，进行服务的迁移，把网站的域名和 DNS 解析指向新的 frp 服务器即可。</p><p><img src="/./resources/blog/24110201/12.webp"></p><p>大功告成！</p><h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>Yoiyami 服务器的搬迁至此就告一段落了，这次体验了一下 ESXi 虚拟化技术的便利，也算是一次不错的实践。</p><p>在半个月的使用时间里，服务器运行非常稳定，使用体验很棒。后续可能还会再给服务器加几块 HDD，用于资源存储，不过那就是后话了。</p><p>总而言之，我很推荐使用物理服务器来替代云服务器，虽然成本节省的可能不算很多，但能带来比云服务器好得多的可拓展性。如果你也有这样的想法的话，不妨去试试吧。</p><p><img src="/./resources/blog/24110201/13.webp" alt="似乎有些过剩的 CPU 性能 :P"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网站</tag>
+      
+      <tag>服务器</tag>
+      
+      <tag>运维</tag>
+      
+      <tag>ESXi</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>frp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>记一次自制 Kigurumi 头壳</title>
+    <link href="/post/24072701/"/>
+    <url>/post/24072701/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起（一些闲话）"><a href="#缘起（一些闲话）" class="headerlink" title="缘起（一些闲话）"></a>缘起（一些闲话）</h1><p>今年年初的时候，我买了一台 FDM 3D 打印机来玩，来自拓竹的 A1。作为入门级机型算是相当不错的了。</p><p><img src="/../resources/blog/24072701/1.webp"></p><p>那么既然已经花了大价钱买了台 3D 打印机，肯定是要拿它来整点活出来的。所以在花了一些时间熟悉了切片、材料、打印机工作流程等知识后，我终于是打算开始做点大项目了。  </p><p><img src="/../resources/blog/24072701/2.webp"></p><p>说起来也巧，刚进入大学的第一年，我结识了不少朋友与同好。其中就有一位 Kigurumi 玩家，也算是我初次了解到 Kigurumi 这个社区。在初步了解了之后，我也有了整一个来玩的打算，果断打开电商平台一看，好家伙，四位数起步，<del>告辞（</del></p><p>然而作为一个喜欢折腾的人，我当然还有另一个选择，那就是：自制。</p><p>于是我就这么踏上了自制 Kigurumi 头壳的旅程（</p><p>而在这其中，头壳白模，正好可以用刚学来的 3D 打印制作，那接下来的步骤就比较清晰了。理论可行，实践开始！</p><h1 id="预算"><a href="#预算" class="headerlink" title="预算"></a>预算</h1><p>下面列举了我本次制作所使用的预算，仅供参考。</p><ul><li>头壳 <strong>~250r</strong><ul><li>打印耗材 50r（如果没有 3D 打印机，则需要更高的价格来获取白模）</li><li>假发 42r</li><li>B603 消光漆 39r</li><li>水补土 30r</li><li>色漆 15r</li><li>砂纸 10r</li><li>金属件 10r</li><li>颜料 11r</li><li>PVC 网 4r</li><li>不织布 13r</li><li>海绵 10r</li><li>磁铁 2r</li><li>魔术贴 8r</li></ul></li><li>Kigurumi 皮 <strong>~380r</strong></li><li>Cosplay 服饰 &amp; 各种饰品 <strong>~400r</strong></li></ul><p><strong>共计 1k 左右。</strong></p><h1 id="头壳制作"><a href="#头壳制作" class="headerlink" title="头壳制作"></a>头壳制作</h1><p>下面是详细的制作过程，如果你想作为参考的话，建议完整看一遍内容，再着手制作。</p><h2 id="0-角色的选择"><a href="#0-角色的选择" class="headerlink" title="0. 角色的选择"></a>0. 角色的选择</h2><p>在开工之前，先挑一个你想做的角色吧。如果对自己的水平不自信的话，可以挑一个做起来比较简单的（</p><p>我这次选择的角色 <strong>稗田阿求（东方 Project)</strong> 算是比较好上手的了，发型简单，发饰简单，并没什么特别的细节。</p><p><img src="/../resources/blog/24072701/84458519_p0.webp" alt="pixiv_id=84458519"></p><h2 id="1-制作白模"><a href="#1-制作白模" class="headerlink" title="1. 制作白模"></a>1. 制作白模</h2><h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>白模的模型的获取实际上是一件比较麻烦的事情，并不是所有人都有合格的美术和建模基础。但好在有前辈分享了一些免费开源的头壳模型，给了刚入门自制头壳的玩家一个非常好的选择，在此感谢这些分享者们。</p><p>这里是一些我找到的开源头壳模型（仅为一小部分）：</p><ul><li><a href="https://www.thingiverse.com/thing:5316376">https://www.thingiverse.com/thing:5316376</a> (@Leide)</li><li><a href="https://github.com/vuicoo/plumKigurumi-">https://github.com/vuicoo/plumKigurumi-</a> (@vuicoo)</li><li><a href="https://github.com/AEMShana/ArisakaMashiroKigurumi">https://github.com/AEMShana/ArisakaMashiroKigurumi</a> (@AEMShana)</li></ul><p>在选择头壳模型的时候，需要注意以下几点：</p><ul><li><p><strong>头围</strong><br> 至少要保证头壳适用头围大于等于你的头围，不然头壳做出来戴不上去就麻烦了。就算头壳头围比你的头围大也没关系，后续可以通过海绵调整。</p></li><li><p><strong>头壳类型（半面、3&#x2F;4 头、全头）</strong><br> 半面制作成本低，但呈现效果并不算太好，如果是自己做的话并不推荐。后两者则效果相差不大，全头相对更好一点，但是也会更热，可以自行衡量二者。</p></li><li><p><strong>脸型</strong><br> 如果你选择了能进行脸型自定义的模型的话，可以花点时间为角色选一个适合的脸型。</p></li></ul><h3 id="关于打印机的构建尺寸"><a href="#关于打印机的构建尺寸" class="headerlink" title="关于打印机的构建尺寸"></a>关于打印机的构建尺寸</h3><p>我手上这台打印机的构建尺寸为 256mm^3，属于勉强足够打印头壳的尺寸。如果你的打印机构建尺寸小于 256mm^3 的话，可能就需要考虑分件或直接找代打了。</p><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>我这次制作的头壳使用了 @Leide 大佬的模型，下面是我切片的方式，仅供参考。</p><h4 id="前壳"><a href="#前壳" class="headerlink" title="前壳"></a>前壳</h4><blockquote><p>打印头：0.4<br>层高：0.2<br>支撑：标准、仅打印板<br>支撑屏蔽：左右两侧的各个孔洞<br>墙层数：3</p></blockquote><p><img src="/../resources/blog/24072701/3.webp"></p><h4 id="后壳"><a href="#后壳" class="headerlink" title="后壳"></a>后壳</h4><blockquote><p>打印头：0.4<br>层高：0.2<br>支撑：标准、仅打印板<br>墙层数：3<br>切分：中间切开、栓连接</p></blockquote><p>由于全头后壳比较大，而且对外观没有太大的需求，所以这里我选择了切分打印。</p><p><img src="/../resources/blog/24072701/4.webp"></p><h3 id="耗材的选择"><a href="#耗材的选择" class="headerlink" title="耗材的选择"></a>耗材的选择</h3><p>能用光固化打自然是最好的，但 FDM 也没问题。我选择了 PETG 作为打印材料，但后续发现 PETG 打磨起来很费力。所以这里我更推荐使用 PLA，虽然会牺牲一定的强度，但能让打磨过程比较轻松。</p><h3 id="开始打印！"><a href="#开始打印！" class="headerlink" title="开始打印！"></a>开始打印！</h3><p>一切就绪之后，接下来就交给 3D 打印机吧。把打印机放到一个不会被打断的地方，然后静静等待即可。</p><p><img src="/../resources/blog/24072701/5.webp"></p><h2 id="2-头壳所需的金属件"><a href="#2-头壳所需的金属件" class="headerlink" title="2. 头壳所需的金属件"></a>2. 头壳所需的金属件</h2><p>在等待头壳打印的时候，可以打开购物平台购买一些需要的材料了。</p><p>一般的头壳都会有两处需要金属件连接的地方：</p><ul><li>顶部转轴</li><li>左右两侧的卡扣</li></ul><p>详细的参数可以参考模型的说明，我使用的这个模型需要：</p><ul><li>M4*60 半牙螺栓 *1</li><li>M3 螺丝+螺母 *4</li><li>中箱扣 3018 *2</li></ul><h2 id="3-组装头壳"><a href="#3-组装头壳" class="headerlink" title="3. 组装头壳"></a>3. 组装头壳</h2><p>使用事先准备的连接栓进行定位，然后往缝隙中填入 502 胶水进行固定，最后装上卡扣，后壳就准备完毕了。<br><img src="/../resources/blog/24072701/6.webp"></p><p>在前壳上装上卡扣的另一部分，然后将顶部连接螺丝安装到位，头壳就组装完成了。<br><img src="/../resources/blog/24072701/7.webp"></p><h2 id="4-补土-打磨-喷漆"><a href="#4-补土-打磨-喷漆" class="headerlink" title="4. 补土&amp;打磨&amp;喷漆"></a>4. 补土&amp;打磨&amp;喷漆</h2><p>这可能是对于初次制作头壳的玩家来说最难的一步了，具体操作可以参考 <a href="https://how.kig.land/DIY/Tips-for-painting">这篇教程</a> 以及网上的各种自喷漆视频教程，这里我只写一些原文没提到的东西。</p><h3 id="低成本的喷漆选择"><a href="#低成本的喷漆选择" class="headerlink" title="低成本的喷漆选择"></a>低成本的喷漆选择</h3><p>对于想要低成本制作头壳的玩家来说，郡士的自喷漆价格有点偏贵。经过我的实践，以下是一个可行的低成本喷漆方案：<br><code>水补土 -&gt; 打磨 -&gt; 三和 40#白色（也可以用白色水补土替代） -&gt; 三和 313#浅粉色 -&gt; 消光漆</code></p><h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol><li><strong>不要在喷漆没干的时候接触漆面！</strong></li><li>不要在高湿度天气下使用消光漆！</li><li>注意个人防护</li></ol><p><img src="/../resources/blog/24072701/8.webp" alt="补土"><br><img src="/../resources/blog/24072701/9.webp" alt="白色底漆"><br><img src="/../resources/blog/24072701/10.webp" alt="肤色漆"></p><h2 id="5-面妆"><a href="#5-面妆" class="headerlink" title="5. 面妆"></a>5. 面妆</h2><p>这一步是可选的，合适的面妆能给头壳增加生动感。</p><p>不过不管怎么说，嘴唇部分还是建议画一下的。直接使用丙烯颜料，调一个合适的颜色，然后往头壳上画一笔即可。<br><img src="/../resources/blog/24072701/11.webp"></p><h2 id="6-眼片"><a href="#6-眼片" class="headerlink" title="6. 眼片"></a>6. 眼片</h2><p>可以去购物平台购买 PVC 防尘网作为眼片的基底，我选择的是 0.5mm 孔径。固定方式可以选择胶带&#x2F;热熔胶&#x2F;磁铁，总之可以自行发挥创意（<br><img src="/../resources/blog/24072701/12.webp"></p><p>关于眼片素材，可以选择从现成的插图素材里扣，或者也可以自己画。调整好大小之后打印到不干胶打印纸上，裁剪下来并粘贴即可。<br><img src="/../resources/blog/24072701/13.webp"></p><h2 id="7-睫毛"><a href="#7-睫毛" class="headerlink" title="7. 睫毛"></a>7. 睫毛</h2><p>将黑色不织布裁剪成合适的形状，然后粘贴到头壳上即可。可以先在普通的纸上用铅笔打个草稿。<br><img src="/../resources/blog/24072701/15.webp"><br><img src="/../resources/blog/24072701/14.webp"></p><h2 id="8-调整海绵"><a href="#8-调整海绵" class="headerlink" title="8. 调整海绵"></a>8. 调整海绵</h2><p>在购物平台上购买一点中高密度海绵来作为头壳内部的缓冲材料，增加舒适度，同时也能让头壳更贴合。可以用绑带固定，也可以用纳米胶（传统的双面胶是很难黏住的）。</p><p>由于装上了假发之后这一步会很难进行，所以强烈建议在装假发之前就把海绵调整到舒适贴合的程度。<br><img src="/../resources/blog/24072701/16.webp"></p><h2 id="9-饰品"><a href="#9-饰品" class="headerlink" title="9. 饰品"></a>9. 饰品</h2><p>不同的角色要准备不同的饰品，所以这一步就留给各位自由发挥了。<br><img src="/../resources/blog/24072701/17.webp"><br><img src="/../resources/blog/24072701/18.webp"><br><img src="/../resources/blog/24072701/19.webp"></p><h2 id="10-假发"><a href="#10-假发" class="headerlink" title="10. 假发"></a>10. 假发</h2><p>自制头壳的又一大难点。由于头壳的头围比普通人大一圈，传统的假发在头壳上会显得很奇怪，所以我们就只能自己修头发了。但又由于我们低成本的原则，购买昂贵的 kig 专用假发并不合适，所以我就选择了以下方案。</p><p>首先去购物平台购买一顶正常头围的假发，但需要选择长度稍长，发量多一些的未修剪假发。接下来用四个魔术贴分别固定在头壳的上下左右四个位置，同时将另一面固定到假发发网上，然将假发与头壳上的魔术贴对准并粘贴，这样就实现了在头壳上使用正常头围的假发。<br><img src="/../resources/blog/24072701/22.webp"></p><p>接下来对假发进行修剪，详细步骤仍然是建议参考网上的各种教程，由于本人也技术不精，这里就不误人子弟了（<br><img src="/../resources/blog/24072701/20.webp" alt="修剪前"><br><img src="/../resources/blog/24072701/21.webp" alt="修剪后"></p><hr><p>至此，头壳的部分就算是完成了。<br><img src="/../resources/blog/24072701/23.webp"></p><h1 id="后续的工作"><a href="#后续的工作" class="headerlink" title="后续的工作"></a>后续的工作</h1><p>头壳完成之后，还需要一些后续步骤。</p><h2 id="Kig-皮"><a href="#Kig-皮" class="headerlink" title="Kig 皮"></a>Kig 皮</h2><p>所谓的 Kig 皮其实就是一套肉粉色紧身衣，可以让头壳和皮肤的颜色匹配度更高。由于 Kig 皮个人制作难度较高，且价格相对定制头壳来说还是可以接受的（~400），所以这里我还是推荐找专门的店家定制。详情可以参考 <a href="https://how.kig.land/get-start#-%E4%BB%8E-kigurumi-%E7%B4%A7%E8%BA%AB%E8%A1%A3%E5%BA%97%E5%AE%B6%E9%87%87%E8%B4%AD%E7%9A%AE">这篇文章</a>。</p><h2 id="Cosplay-服饰"><a href="#Cosplay-服饰" class="headerlink" title="Cosplay 服饰"></a>Cosplay 服饰</h2><p>准备 Cosplay 服饰反而是比较简单的一件事情了，选择合适的尺寸，找店家制作即可（只要是本人能穿的下的尺寸就能给 Kig 穿）。<br><img src="/../resources/blog/24072701/24.webp"></p><h1 id="一切就绪！"><a href="#一切就绪！" class="headerlink" title="一切就绪！"></a>一切就绪！</h1><p>如果你跟着做到了这里，<strong>那么恭喜你！</strong>你可以开始你的 Kigurumi 之旅了。<br><img src="/../resources/blog/24072701/25.webp"></p><h1 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h1><p>如果你还有其他本文未提及的问题，也可以直接来问我。你可以加 <code>QQ2114085565</code> 或发邮件到 <code>ltfjx2333@gmail.com</code>。  </p><p><strong>祝玩的开心：D</strong></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>DIY</tag>
+      
+      <tag>3D 打印</tag>
+      
+      <tag>Kigurumi</tag>
+      
+      <tag>Cosplay</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>舞萌 DX 2023 彩框留念</title>
+    <link href="/post/23060501/"/>
+    <url>/post/23060501/</url>
+    
+    <content type="html"><![CDATA[<p>入坑舞萌两年，在大版本更新前一个月达成了 15000 Rating，马上就要到 2024 的时代了，用这篇博客来纪念一下。  </p><h2 id="B50"><a href="#B50" class="headerlink" title="B50"></a>B50</h2><p><img src="/../resources/blog/24060501/b50.webp"></p><h2 id="十段"><a href="#十段" class="headerlink" title="十段"></a>十段</h2><p><img src="/../resources/blog/24060501/2.jpg"></p><h2 id="小作文"><a href="#小作文" class="headerlink" title="小作文"></a>小作文</h2><p><img src="/../resources/blog/24060501/1.jpg"></p><h2 id="Illust-By-終電"><a href="#Illust-By-終電" class="headerlink" title="Illust By 終電"></a>Illust By 終電</h2><p><img src="/../resources/blog/24060501/Festival_115673345.webp"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MUG</tag>
+      
+      <tag>MAIMAI</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>ONGEKI/音击 自制手台记录</title>
+    <link href="/post/23112201/"/>
+    <url>/post/23112201/</url>
+    
+    <content type="html"><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>NAGEKI MICRO 方案使用了六个<code>33*33mm主键</code>与两个<code>60*60mm方形侧键</code>，这一按键配置与官机有较大区别。虽然目前已经有一些比较成熟的高仿官机开源手台方案，如 <a href="https://github.com/Umi4Life/NAGEKI-3.33">Umi4Life&#x2F;NAGEKI-3.33</a>，但由于成本过高与制作难度较大，对于初心者来说并不友好。</p><p><img src="/../resources/blog/23112201/3.webp"></p><p>虽然本文所使用的方案并不能完全还原官机手感，但非常适合想体验音击但预算不足的玩家。经过我自己的测试，在组件恰当固定的前提下，完全能打高难度的谱面。当然，如果你追求完全还原官机的手感，建议还是考虑其他方案。</p><p><strong>需要注意的是，我对 NAGEKI 方案做了很多调整来保证最佳效果，因此不建议同时参考两篇教程。</strong></p><h1 id="前提准备"><a href="#前提准备" class="headerlink" title="前提准备"></a>前提准备</h1><p>你需要拥有一定的<strong>动手能力</strong>、<strong>编程基础</strong>和<strong>基础焊接技能</strong>，同时也需要拥有对应的工具。</p><p>此外，你需要自行配置 ONGEKI 游戏本体，请自行寻找教程，本文此处不再赘述。</p><h1 id="材料列表"><a href="#材料列表" class="headerlink" title="材料列表"></a>材料列表</h1><p>如果你只追求游玩体验，那么只需要考虑必选的材料。如果你对手台的外观等方面有一定要求，可以看看可选材料。</p><h2 id="必须"><a href="#必须" class="headerlink" title="必须"></a>必须</h2><ul><li>PVC材质 NAGEKI MICRO 外壳（TB多美歌）（150CNY）</li><li>100mm不锈钢杆 直径6mm（~5CNY）</li><li>200mm不锈钢杆 直径4mm（~6CNY）</li><li>ProMicro 5V（~35CNY）</li><li>1*4P直排针*50（~3CNY）</li><li>NAGEKI PCB（嘉立创免费打样）</li><li>33*33按键*8、60*60按键*2（~95CNY）</li><li>微动开关*10（~35CNY）</li><li>轻按键弹簧*8（~20CNY）</li><li>机械键盘润轴油脂+笔（~7CNY）</li><li>机床操作杆 M6*110mm（~4CNY）</li><li>各种杜邦线（公公、母母、公母）（~10CNY）</li><li>鳄鱼夹杜邦线*20（公转鳄鱼夹）（~10CNY）</li><li>6mm六角联轴器 30mm长度（~5CNY）</li><li>刚性联轴器 外径20 长25 内孔6*6（~5CNY）</li><li>止动环 内径24 M6（~3CNY）</li><li>单联电位器 B10K 20mm（~3CNY）</li><li>T型硅胶护线圈 内径22（~5CNY）</li><li>PVC胶水（~5CNY）</li></ul><p><strong>总价约为400CNY</strong></p><h2 id="可选"><a href="#可选" class="headerlink" title="可选"></a>可选</h2><h3 id="改善手台线路"><a href="#改善手台线路" class="headerlink" title="改善手台线路"></a>改善手台线路</h3><blockquote><p>由于该外壳开孔偏小，必须使用扁线才能穿孔，<br>当然你也可以自己把孔扩大一些。</p></blockquote><ul><li>TYPE-C 扁线</li></ul><p><img src="/../resources/blog/23112201/4.webp"></p><p><img src="/../resources/blog/23112201/5.webp"></p><h3 id="可拆卸底板"><a href="#可拆卸底板" class="headerlink" title="可拆卸底板"></a>可拆卸底板</h3><blockquote><p>不建议直接把底板固定上去，用柜门磁吸片更便于维护。</p></blockquote><ul><li>柜门磁吸片</li></ul><h3 id="按键灯光"><a href="#按键灯光" class="headerlink" title="按键灯光"></a>按键灯光</h3><blockquote><p>单色灯光比较省事，当然你也可以自己捣鼓一下游戏灯光同步。</p></blockquote><ul><li>5V LED</li><li>鳄鱼夹杜邦线</li></ul><h1 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h1><h2 id="NAGEKI-PCB"><a href="#NAGEKI-PCB" class="headerlink" title="NAGEKI PCB"></a>NAGEKI PCB</h2><p><a href="https://github.com/Nana0Nana/NAGEKI/blob/main/NAGEKI%20PCB%20V2.zip">NAGEKI PCB V2.zip</a> </p><blockquote><p>链接已失效，补档见文末  </p></blockquote><p>在此下载 PCB 制板文件，直接上传至嘉立创并下单即可。</p><h2 id="按键弹簧的购买"><a href="#按键弹簧的购买" class="headerlink" title="按键弹簧的购买"></a>按键弹簧的购买</h2><p>由于音游的操作密度比较大，强烈建议选择力度较轻的弹簧，可以自行咨询店家。</p><h2 id="开发板排针问题"><a href="#开发板排针问题" class="headerlink" title="开发板排针问题"></a>开发板排针问题</h2><p>有些 ProMicro 开发板会在底部多一排排针，但 NAGEKI PCB 上并没有为这排排针预留孔位，因此建议买未焊排针的开发板，自行焊接所需的排针。<br><img src="/../resources/blog/23112201/11.webp"></p><h1 id="组装流程"><a href="#组装流程" class="headerlink" title="组装流程"></a>组装流程</h1><p>在拿到大部分材料后，就可以开始着手组装了。</p><h2 id="1-搭建外壳"><a href="#1-搭建外壳" class="headerlink" title="1.搭建外壳"></a>1.搭建外壳</h2><p><img src="/../resources/blog/23112201/12.webp"></p><p><img src="/../resources/blog/23112201/10.webp"></p><p>你可以选择使用 PVC 胶水粘合，也可以选择用自攻螺丝固定。如果要使用自攻螺丝，建议打孔后再上螺丝，避免损伤 PVC 外壳。</p><p>由于 PVC 胶水对该材质的粘性已经够强，此处我直接使用了这个比较省事的固定方案。</p><p>顶层彩印亚克力板无需自行固定，在安装按键后就会固定住。底板可以先不固定，便于处理内部线路。</p><h2 id="2-安装按键"><a href="#2-安装按键" class="headerlink" title="2.安装按键"></a>2.安装按键</h2><p>在安装前，建议先用机械键盘润轴油脂润滑一下，保证手感。</p><p>润滑完毕后，安装微动开关。对准两个短柱，将微动开关卡上去。</p><p>随后就可以把按键安装到外壳上了。</p><h2 id="3-焊接开发板"><a href="#3-焊接开发板" class="headerlink" title="3.焊接开发板"></a>3.焊接开发板</h2><p>焊接排针、开发板与 NAGEKI PCB。</p><h2 id="4-焊接电位器"><a href="#4-焊接电位器" class="headerlink" title="4.焊接电位器"></a>4.焊接电位器</h2><p>电位器有三个引脚，分别是 VCC、GND、模拟信号。由于杜邦线难以连接到电位器上，我将三根母对母杜邦线的一头剪开，并焊接到了电位器上，另一侧插到 PCB 上。</p><p><img src="/../resources/blog/23112201/9.webp"></p><p>位于电位器两侧的引脚为VCC&#x2F;GND，中间的引脚为模拟信号，接入 PCB 上的 A0 口。</p><h2 id="5-摇杆组装"><a href="#5-摇杆组装" class="headerlink" title="5.摇杆组装"></a>5.摇杆组装</h2><p>整个摇杆的结构：</p><p><img src="/../resources/blog/23112201/2.webp"></p><p><img src="/../resources/blog/23112201/7.webp"></p><p>使用 2 根 200mm*4mm 不锈钢杆作为摇杆限位杆，直接穿入孔内即可。请务必将各个止动螺丝固定牢固，否则可能会产生摇杆漂移等问题。</p><p>由于这个台子比较小，我没有找到合适的固定方案，我使用了多层纸板+热熔胶固定，由于纸板纵向强度较强，结构稳定度还算可以。</p><h2 id="6-接线"><a href="#6-接线" class="headerlink" title="6.接线"></a>6.接线</h2><p>根据 PCB 上的印刷文本提示，将微动开关连接到 PCB 上（GND 和 IO 分别连接到微动开关的两个引脚）<br><img src="/../resources/blog/23112201/1.webp"><br><img src="/../resources/blog/23112201/6.webp"></p><h2 id="7-烧写软件"><a href="#7-烧写软件" class="headerlink" title="7.烧写软件"></a>7.烧写软件</h2><p>将 <a href="https://github.com/Nana0Nana/ongeki-io/tree/develop/mu3hid">ongeki-io</a> 固件烧写到开发板上，Arduino IDE 的配置在此不再赘述。如果开发版亮绿灯，则固件正常运行。</p><p>最后，如果你没有外接 AIME 读卡器，你需要将卡号写入固件内。以下是示例代码：</p><blockquote><p>你可以用这个 AIME 卡号生成器小工具来快速生成卡号及其数组：<br><a href="https://utils.akyuu.cn/utils/aime-generator">PotatoUtils&#x2F;aime-generator</a></p></blockquote><figure><div class="code-wrapper"><pre class="line-numbers language-C" data-language="C"><code class="language-C">if(data-&gt;buttons[4] &amp;&amp; data-&gt;buttons[9]) &#123;    &#x2F;&#x2F; 假设你的卡号是：66 14 22 53 21 60 74 99 33 11    &#x2F;&#x2F; 则你需要将其转为十进制写入 aimi_id 中，如下：    data-&gt;aimi_id &#x3D; &#123;102,20,34,83,33,96,116,153,51,17&#125;;    data-&gt;scan &#x3D; true;&#125;</code></pre></div></figure><h2 id="8-修改游戏-dll"><a href="#8-修改游戏-dll" class="headerlink" title="8.修改游戏 dll"></a>8.修改游戏 dll</h2><p>按照 <a href="https://github.com/Nana0Nana/ongeki-io/blob/develop/README.md">ongeki-io&#x2F;README.md</a> 操作即可。</p><h2 id="9-启动游戏！"><a href="#9-启动游戏！" class="headerlink" title="9.启动游戏！"></a>9.启动游戏！</h2><p>如果你正确替换了 dll，游戏在启动时会弹出 NAGEKI 的界面，你可以在这个界面上测试你的所有手台功能。</p><p>如果你发现你的摇杆方向反了，将电位器上的 VCC 和 GND 反接即可。</p><p>之后，进入游戏 test 模式并校准摇杆，最后回到 service 模式，<strong>按住</strong>两个menu刷卡。如果一切顺利的话，你就能正常游玩了。</p><h2 id="10-更多的优化…"><a href="#10-更多的优化…" class="headerlink" title="10.更多的优化…"></a>10.更多的优化…</h2><p>由于摇杆使用了电位器，其信号输入为模拟信号，因此难免产生数据抖动。我在固件内加入了滞后滤波算法来实现平滑，你也可以自行修改固件来实现类似的效果。</p><h1 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h1><h3 id="Q-我的左右侧键是常开的-会乱跳？"><a href="#Q-我的左右侧键是常开的-会乱跳？" class="headerlink" title="Q: 我的左右侧键是常开的&#x2F;会乱跳？"></a>Q: 我的左右侧键是常开的&#x2F;会乱跳？</h3><p>A: 由于固件默认是反转左右侧键的状态的，所以导致了这个问题。你有两个选择：  </p><ol><li>如果你的微动是三脚的，那么就换一种接法（常闭引脚换成常开引脚）  </li><li>修改固件，如下：  <figure><div class="code-wrapper"><pre class="line-numbers language-C" data-language="C"><code class="language-C">for(auto i &#x3D; 0; i &lt; 10; i++) &#123;    data-&gt;buttons[i] &#x3D; digitalRead(PIN_MAP[i]) &#x3D;&#x3D; LOW;&#125;</code></pre></div></figure></li></ol><h1 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h1><p>如果你还有其他本文未提及的问题，可以直接来问我。你可以加 <code>QQ2114085565</code> 或发邮件到 <code>ltfjx2333@gmail.com</code>。  </p><p><strong>祝玩的开心:D</strong></p><h1 id="后记-NAGEKI-仓库备份"><a href="#后记-NAGEKI-仓库备份" class="headerlink" title="后记 - NAGEKI 仓库备份"></a>后记 - NAGEKI 仓库备份</h1><p>NAGEKI 原仓库出于某些原因被删除了，在此为了方便各位使用，我上传了一份备份，如有不妥请联系我进行删除。</p><p><a href="https://cloud.akyuu.cn/s/YDfZ">NAGEKI-main</a><br><a href="https://cloud.akyuu.cn/s/d1i7">ongeki-io-develop</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>开发</tag>
+      
+      <tag>DIY</tag>
+      
+      <tag>MUG</tag>
+      
+      <tag>ONGEKI</tag>
+      
+      <tag>手台</tag>
+      
+      <tag>嵌入式</tag>
+      
+      <tag>Arduino</tag>
+      
+      <tag>ProMicro</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>摄影随拍 - 城市里的追光逐影</title>
+    <link href="/post/23030401/"/>
+    <url>/post/23030401/</url>
+    
+    <content type="html"><![CDATA[<h2 id="拍摄地点"><a href="#拍摄地点" class="headerlink" title="拍摄地点"></a>拍摄地点</h2><p>上海市 青浦区</p><h2 id="使用设备"><a href="#使用设备" class="headerlink" title="使用设备"></a>使用设备</h2><p>PENTAX K-5 II s</p><h1 id="成片"><a href="#成片" class="headerlink" title="成片"></a>成片</h1><p><img src="/../resources/blog/23030401/1.webp"><br><img src="/../resources/blog/23030401/2.webp"><br><img src="/../resources/blog/23030401/3.webp"><br><img src="/../resources/blog/23030401/4.webp"><br><img src="/../resources/blog/23030401/5.webp"><br><img src="/../resources/blog/23030401/6.webp"><br><img src="/../resources/blog/23030401/7.webp"><br><img src="/../resources/blog/23030401/8.webp"><br><img src="/../resources/blog/23030401/9.webp"><br><img src="/../resources/blog/23030401/10.webp"><br><img src="/../resources/blog/23030401/11.webp"><br><img src="/../resources/blog/23030401/12.webp"><br><img src="/../resources/blog/23030401/13.webp"><br><img src="/../resources/blog/23030401/14.webp"><br><img src="/../resources/blog/23030401/15.webp"><br><img src="/../resources/blog/23030401/16.webp"><br><img src="/../resources/blog/23030401/17.webp"><br><img src="/../resources/blog/23030401/18.webp"><br><img src="/../resources/blog/23030401/19.webp"><br><img src="/../resources/blog/23030401/20.webp"><br><img src="/../resources/blog/23030401/21.webp"><br><img src="/../resources/blog/23030401/22.webp"><br><img src="/../resources/blog/23030401/23.webp"><br><img src="/../resources/blog/23030401/24.webp"><br><img src="/../resources/blog/23030401/25.webp"><br><img src="/../resources/blog/23030401/26.webp"><br><img src="/../resources/blog/23030401/27.webp"><br><img src="/../resources/blog/23030401/28.webp"><br><img src="/../resources/blog/23030401/29.webp"><br><img src="/../resources/blog/23030401/30.webp"><br><img src="/../resources/blog/23030401/31.webp"><br><img src="/../resources/blog/23030401/32.webp"><br><img src="/../resources/blog/23030401/33.webp"><br><img src="/../resources/blog/23030401/34.webp"><br><img src="/../resources/blog/23030401/35.webp"><br><img src="/../resources/blog/23030401/36.webp"><br><img src="/../resources/blog/23030401/37.webp"><br><img src="/../resources/blog/23030401/38.webp"><br><img src="/../resources/blog/23030401/39.webp"><br><img src="/../resources/blog/23030401/40.webp"><br><img src="/../resources/blog/23030401/41.webp"><br><img src="/../resources/blog/23030401/42.webp"><br><img src="/../resources/blog/23030401/43.webp"><br><img src="/../resources/blog/23030401/44.webp"><br><img src="/../resources/blog/23030401/45.webp"><br><img src="/../resources/blog/23030401/46.webp"><br><img src="/../resources/blog/23030401/47.webp"><br><img src="/../resources/blog/23030401/48.webp"><br><img src="/../resources/blog/23030401/49.webp"><br><img src="/../resources/blog/23030401/50.webp"><br><img src="/../resources/blog/23030401/51.webp"><br><img src="/../resources/blog/23030401/52.webp"><br><img src="/../resources/blog/23030401/53.webp"><br><img src="/../resources/blog/23030401/54.webp"><br><img src="/../resources/blog/23030401/55.webp"><br><img src="/../resources/blog/23030401/56.webp"><br><img src="/../resources/blog/23030401/57.webp"><br><img src="/../resources/blog/23030401/58.webp"><br><img src="/../resources/blog/23030401/59.webp"><br><img src="/../resources/blog/23030401/60.webp"><br><img src="/../resources/blog/23030401/61.webp"><br><img src="/../resources/blog/23030401/62.webp"><br><img src="/../resources/blog/23030401/63.webp"><br><img src="/../resources/blog/23030401/64.webp"><br><img src="/../resources/blog/23030401/65.webp"><br><img src="/../resources/blog/23030401/66.webp"><br><img src="/../resources/blog/23030401/67.webp"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>摄影</tag>
+      
+      <tag>后期</tag>
+      
+      <tag>城市</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>解放型蒸汽机车模型 - 蒸汽小火车探险记</title>
+    <link href="/post/23012801/"/>
+    <url>/post/23012801/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>这辆车在发布时位于 <code>上海亚宇特种医用橡胶制品厂（上海市青浦区朱枫公路580号）</code> 北部的一条小路。</p><p><img src="/../resources/blog/23012801/2.webp" alt="解放 0918"><br><img src="/../resources/blog/23012801/3.webp"><br><img src="/../resources/blog/23012801/map.webp"></p><p>机车是新的模型。不过根据附近的环境推断，其他车厢很可能在被废弃之后被某位老板买下，并临时停在这里进行翻新。笔者在写这篇文章的时候客运和货运车厢正在翻新。如果你也想来看看，请务必注意文章的时效性。</p><p><img src="/../resources/blog/23012801/1.webp" alt="正在翻新的车厢"></p><p>*我还是挺想知道这辆车最后会作为什么用的，说不定会是餐厅之类的（？<br>反正也不会开在这么偏的地方就是了（</p><p>全长约 300 米，有一辆解放型蒸汽机车模型，很多旧客运车厢和货运车厢。</p><h2 id="蒸汽机车"><a href="#蒸汽机车" class="headerlink" title="蒸汽机车"></a>蒸汽机车</h2><p><img src="/../resources/blog/23012801/4.webp"><br><img src="/../resources/blog/23012801/5.webp"><br><img src="/../resources/blog/23012801/6.webp"><br><img src="/../resources/blog/23012801/7.webp"><br><img src="/../resources/blog/23012801/8.webp"><br><img src="/../resources/blog/23012801/9.webp" alt="生锈的铁轨"><br><img src="/../resources/blog/23012801/10.webp"><br><img src="/../resources/blog/23012801/11.webp"><br><img src="/../resources/blog/23012801/12.webp"><br><img src="/../resources/blog/23012801/13.webp"><br><img src="/../resources/blog/23012801/14.webp"><br><img src="/../resources/blog/23012801/15.webp"></p><h2 id="未翻新的车厢"><a href="#未翻新的车厢" class="headerlink" title="未翻新的车厢"></a>未翻新的车厢</h2><p><img src="/../resources/blog/23012801/16.webp"><br><img src="/../resources/blog/23012801/17.webp"><br><img src="/../resources/blog/23012801/18.webp"><br><img src="/../resources/blog/23012801/19.webp"><br><img src="/../resources/blog/23012801/20.webp" alt="涂鸦"><br><img src="/../resources/blog/23012801/21.webp"><br><img src="/../resources/blog/23012801/22.webp"><br><img src="/../resources/blog/23012801/23.webp"><br><img src="/../resources/blog/23012801/24.webp"><br><img src="/../resources/blog/23012801/25.webp" alt="已经看不清前面的字了"><br><img src="/../resources/blog/23012801/26.webp"><br><img src="/../resources/blog/23012801/27.webp"><br><img src="/../resources/blog/23012801/28.webp" alt="被改造的车顶"><br><img src="/../resources/blog/23012801/29.webp"><br><img src="/../resources/blog/23012801/30.webp"><br><img src="/../resources/blog/23012801/31.webp"><br><img src="/../resources/blog/23012801/32.webp"><br><img src="/../resources/blog/23012801/33.webp"><br><img src="/../resources/blog/23012801/34.webp"><br><img src="/../resources/blog/23012801/35.webp"><br><img src="/../resources/blog/23012801/36.webp"><br><img src="/../resources/blog/23012801/37.webp"><br><img src="/../resources/blog/23012801/38.webp"></p><h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>探险 ×<br>摄影 ✔</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>摄影</tag>
+      
+      <tag>铁路</tag>
+      
+      <tag>火车</tag>
+      
+      <tag>蒸汽机车</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>记一次奇怪的系统问题：CPU 占用始终为 100%</title>
+    <link href="/post/22112801/"/>
+    <url>/post/22112801/</url>
+    
+    <content type="html"><![CDATA[<h1 id="问题表现"><a href="#问题表现" class="headerlink" title="问题表现"></a>问题表现</h1><p>CPU 占用率 100%，但后台没有高占用软件。</p><p><img src="/../resources/blog/22112801/1.webp"></p><h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><ol><li>打开 <code>控制面板\硬件和声音\电源选项</code></li><li>选择 <code>平衡</code></li></ol><h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><p>在电源计划的设置中，有一项参数为 <code>最小处理器状态</code>。由于有些应用程序需要高性能，它可能会改变系统电源选项，导致这一参数被修改为 100%。</p><p><img src="/../resources/blog/22112801/2.webp"></p><p>CPU 在这样的设置下会满载运行，即便没有什么可处理的。因此产生了第一张图这种情况。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>日影</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>系统</tag>
+      
+      <tag>Windows10</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>边学边做的 AE 笔记</title>
+    <link href="/post/22111801/"/>
+    <url>/post/22111801/</url>
+    
+    <content type="html"><![CDATA[<h2 id="绘制平行四边形"><a href="#绘制平行四边形" class="headerlink" title="绘制平行四边形"></a>绘制平行四边形</h2><p>选择矩形工具，绘制一个矩形。在形状图层中找到 <code>内容</code> - <code>矩形1</code> - <code>变换：矩形1</code>，修改其中 <code>倾斜</code> 的数 值直到满意即可。</p><p><img src="/../resources/blog/22111801/image-20221118231616630.png"></p><h2 id="让贴图铺满屏幕"><a href="#让贴图铺满屏幕" class="headerlink" title="让贴图铺满屏幕"></a>让贴图铺满屏幕</h2><p>给贴图应用 <code>效果</code> - <code>风格化</code> - <code>CC RepeTile</code>。然后调整 Expand 方向和距离。（而且这个效果是可以套娃的，非常方便）</p><p><img src="/../resources/blog/22111801/image-20221118232008794.png"></p><p><img src="/../resources/blog/22111801/image-20221118232039826.png"></p><h2 id="交叉溶解在哪里？"><a href="#交叉溶解在哪里？" class="headerlink" title="交叉溶解在哪里？"></a>交叉溶解在哪里？</h2><p>反正我是没找到，建议不透明度关键帧动画。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计</tag>
+      
+      <tag>AfterEffects</tag>
+      
+      <tag>Adobe</tag>
+      
+      <tag>后期</tag>
+      
+      <tag>动画</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>2022-11-08 月全食（月掩天王星） 摄影记录</title>
+    <link href="/post/22110801/"/>
+    <url>/post/22110801/</url>
+    
+    <content type="html"><![CDATA[<h2 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h2><h3 id="月食信息"><a href="#月食信息" class="headerlink" title="月食信息"></a>月食信息</h3><blockquote><p>半影食始：<strong>16:00:43</strong><br>初亏：<strong>17:08:59</strong><br>食既：<strong>18:16:19</strong><br>食甚：<strong>18:57:26</strong><br>生光：<strong>19:42:01</strong><br>复圆：<strong>20:49:20</strong><br>半影食终：<strong>21:57:46</strong><br>--------------------------------<br>全食历时：<strong>01时25分50秒</strong><br>初亏到复圆：<strong>03时40分22秒</strong></p></blockquote><h3 id="拍摄地点"><a href="#拍摄地点" class="headerlink" title="拍摄地点"></a>拍摄地点</h3><p>上海市 青浦区</p><h3 id="使用设备"><a href="#使用设备" class="headerlink" title="使用设备"></a>使用设备</h3><p>PENTAX K-5 II s</p><h2 id="照片"><a href="#照片" class="headerlink" title="照片"></a>照片</h2><h2 id="f-7-1-1-3s-ISO-800-1-250mm"><a href="#f-7-1-1-3s-ISO-800-1-250mm" class="headerlink" title="&gt; f&#x2F;7.1 1.3s ISO-800 -1 250mm"></a><img src="/../resources/blog/22110801/IMGP0786.webp"><br>&gt; f&#x2F;7.1 1.3s ISO-800 -1 250mm</h2><h2 id="f-6-3-2-5s-ISO-800-0-250mm"><a href="#f-6-3-2-5s-ISO-800-0-250mm" class="headerlink" title="&gt; f&#x2F;6.3 2.5s ISO-800 0 250mm  "></a><img src="/../resources/blog/22110801/IMGP0808.webp"><br>&gt; f&#x2F;6.3 2.5s ISO-800 0 250mm  </h2><p><img src="/../resources/blog/22110801/IMGP0790.webp"></p><blockquote><p>f&#x2F;8 3s ISO-800 -1.3 31mm  </p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>摄影</tag>
+      
+      <tag>月食</tag>
+      
+      <tag>天文</tag>
+      
+      <tag>月球</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>在 RHEL9 上安装 Transmission</title>
+    <link href="/post/22081601/"/>
+    <url>/post/22081601/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>BT 下载并不是什么新鲜玩意了，相信大部分人都多少接触过。用的比较多的人可能会体会到下载过程中漫长的等待时间和 0kb&#x2F;s 的苦恼。为了解决这些问题，我打算把这一过程搬到服务器上进行。</p><p>我采用了这个方案主要出于以下三点考虑：</p><ol><li><strong>国内运营商使用的网络类型对 BT 不友好。</strong>而服务器则是独立 ip + 开放端口，网络接入也更给力，因此下载速度会比家用电脑快很多。</li><li><strong>做种时，不必占用自己家用的上传宽带。</strong>且服务器上传带宽会大很多。</li><li><strong>不用一直开着电脑。</strong>这是最实在的一点，没人想支付昂贵的电费来下载这些文件。</li></ol><h1 id="安装-Transmission"><a href="#安装-Transmission" class="headerlink" title="安装 Transmission"></a>安装 Transmission</h1><h3 id="1-安装-geekery-release"><a href="#1-安装-geekery-release" class="headerlink" title="1. 安装 geekery-release"></a>1. 安装 geekery-release</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wget http:&#x2F;&#x2F;geekery.altervista.org&#x2F;geekery&#x2F;el8&#x2F;x86_64&#x2F;geekery-release-8-2.noarch.rpmsudo rpm -i geekery-release-8-2.noarch.rpm</code></pre></div></figure><h3 id="2-安装-EPEL"><a href="#2-安装-EPEL" class="headerlink" title="2. 安装 EPEL"></a>2. 安装 EPEL</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo dnf install epel-release</code></pre></div></figure><h3 id="3-安装-compat-openssl11"><a href="#3-安装-compat-openssl11" class="headerlink" title="3. 安装 compat-openssl11"></a>3. 安装 compat-openssl11</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo dnf install compat-openssl11</code></pre></div></figure><h3 id="4-安装-libevent"><a href="#4-安装-libevent" class="headerlink" title="4. 安装 libevent"></a>4. 安装 libevent</h3><div class="note note-warning">            <p>由于版本问题，这里我们手动安装这个库</p>          </div><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wget ftp.opensuse.org&#x2F;distribution&#x2F;leap&#x2F;15.2&#x2F;repo&#x2F;oss&#x2F;x86_64&#x2F;libevent-2_1-8-2.1.8-lp152.4.5.x86_64.rpmsudo rpm -i libevent-2_1-8-2.1.8-lp152.4.5.x86_64.rpm</code></pre></div></figure><h3 id="5-安装-Transmission"><a href="#5-安装-Transmission" class="headerlink" title="5. 安装 Transmission"></a>5. 安装 Transmission</h3><div class="note note-warning">            <p>如果你的服务器在国内，很可能在获取 transmission 的时候下载失败。可以使用代理或多次尝试（记得 sudo dnf clean packages）。</p>          </div><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo dnf install transmission-gtk transmission-cli transmission-common transmission-daemon</code></pre></div></figure><h3 id="6-启动一次-Transmission"><a href="#6-启动一次-Transmission" class="headerlink" title="6. 启动一次 Transmission"></a>6. 启动一次 Transmission</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">systemctl start transmission-daemon.servicesystemctl stop transmission-daemon.service</code></pre></div></figure><h3 id="7-修改配置文件"><a href="#7-修改配置文件" class="headerlink" title="7. 修改配置文件"></a>7. 修改配置文件</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo vi &#x2F;var&#x2F;lib&#x2F;transmission&#x2F;settings.json</code></pre></div></figure><p>可以自行修改，注意以下内容：</p><figure><div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json">&quot;rpc-authentication-required&quot;: true,&quot;rpc-whitelist-enabled&quot;: false,&quot;rpc-username&quot;: &quot;web管理用户名&quot;,&quot;rpc-password&quot;: &quot;web管理密码&quot;,</code></pre></div></figure><p>出于安全考虑，请务必开启web登陆功能并设置强密码。修改完成后启动 Transmission。</p><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">systemctl start transmission-daemon.service</code></pre></div></figure><p>之后用浏览器打开 <code>&lt;你的服务器IP&gt;:9091</code> 就可以进行下载管理了。</p><p><img src="/./resources/blog/22081601/image-20220816162540688.webp"></p><h1 id="简单使用教程"><a href="#简单使用教程" class="headerlink" title="简单使用教程"></a>简单使用教程</h1><ol><li>左上角新建下载任务，选择种子、下载位置等，点击添加。如果没有出现，手动刷新网页。</li><li>双击任务可以打开属性菜单，可以选择下载哪些文件、指定优先级等等。</li><li>等待下载。此时可以离开网页。</li><li>下载完成后，进入服务器对应目录，从服务器下载该文件即可。</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>服务器</tag>
+      
+      <tag>RHEL</tag>
+      
+      <tag>Linux</tag>
+      
+      <tag>运维</tag>
+      
+      <tag>BitTorrent</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>热力图的*不*完美烹饪教室之 空气炸锅炸薯条</title>
+    <link href="/post/22072001/"/>
+    <url>/post/22072001/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Intro（？"><a href="#Intro（？" class="headerlink" title="Intro（？?"></a>Intro（？?</h1><p>各位！热力图的烹饪教室要开课喽！</p><p>要以像我一样的新东方厨师(? 为目标，努力奋斗哦！</p><p><del>（被打</del></p><h1 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h1><ul><li><p>空气炸锅</p></li><li><p>一些土豆！</p></li><li><p>一些油</p></li><li><p>一些盐</p></li><li><p>烤盘（可选）</p></li><li><p>灵巧的双手</p></li><li><p>聪明的大脑</p></li></ul><h1 id="制作流程"><a href="#制作流程" class="headerlink" title="制作流程"></a>制作流程</h1><h3 id="1-土豆清洗、削皮、切条"><a href="#1-土豆清洗、削皮、切条" class="headerlink" title="1. 土豆清洗、削皮、切条"></a>1. 土豆清洗、削皮、切条</h3><p>我觉得应该没啥可说的。</p><p><img src="/resources/blog/22072001/IMG_20220719_215842.webp"></p><h3 id="2-用水清洗"><a href="#2-用水清洗" class="headerlink" title="2. 用水清洗"></a>2. 用水清洗</h3><p>过几次水，直到浸泡的水不再出现白色浑浊物。</p><h3 id="3-用水浸泡"><a href="#3-用水浸泡" class="headerlink" title="3. 用水浸泡"></a>3. 用水浸泡</h3><p>加入适量清水，淹没所有土豆条，并放置十分钟。</p><p><img src="/resources/blog/22072001/IMG_20220719_220100.webp"></p><h3 id="4-倒入锅中"><a href="#4-倒入锅中" class="headerlink" title="4. 倒入锅中"></a>4. 倒入锅中</h3><p>将刚才的土豆条倒入锅中，加入半勺盐。加热约两分钟后捞出。</p><p><img src="/resources/blog/22072001/IMG_20220719_221419.webp"></p><h3 id="5-晾干"><a href="#5-晾干" class="headerlink" title="5. 晾干"></a>5. 晾干</h3><p>用网状的工具晾一下就可以了。</p><h3 id="6-加油、盐，并搅拌"><a href="#6-加油、盐，并搅拌" class="headerlink" title="6. 加油、盐，并搅拌"></a>6. 加油、盐，并搅拌</h3><p>加入适量的油和盐，搅拌均匀。（也可以用椒盐代替普通的盐，依据个人喜好）</p><h3 id="7-放入烤盘"><a href="#7-放入烤盘" class="headerlink" title="7. 放入烤盘"></a>7. 放入烤盘</h3><p>放入烤盘并平铺均匀。如果没有烤盘也可以直接放在空气炸锅里。</p><p><img src="/resources/blog/22072001/IMG_20220719_220339.webp"></p><h3 id="8-开启空气炸锅"><a href="#8-开启空气炸锅" class="headerlink" title="8. 开启空气炸锅"></a>8. 开启空气炸锅</h3><p>175 度 15 分钟。翻面后加 195 度 5 分钟。完成。</p><p><img src="/resources/blog/22072001/IMG_20220719_224613.webp"></p><p><img src="/resources/blog/22072001/IMG_20220719_225246.webp"></p><p>如果还有没熟的薯条，可以先取出一部分，剩下的继续加热。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>生活</tag>
+      
+      <tag>☆ - 热力图的不完美烹饪教室</tag>
+      
+      <tag>烹饪</tag>
+      
+      <tag>深夜必看</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>通过 JavaScript 使 Hexo 分类页根据指定顺序排序</title>
+    <link href="/post/22071301/"/>
+    <url>/post/22071301/</url>
+    
+    <content type="html"><![CDATA[<h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>Hexo 的分类页面会自动给所有分类进行排序。如果要手动指定分类的顺序，最简单的实现方法就是使用 JavaScript 移动元素。</p><h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>新建一个 JavaScript 脚本，粘贴以下代码并引入（适用于 Fluid 主题，可以自行修改来适配其他主题）</p><figure><div class="code-wrapper"><pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">&#x2F;&#x2F;&#x2F;&#x2F; 自动排序 - 在分类页面执行，使分类按照指定顺序排序。&#x2F;&#x2F;&#x2F;&#x2F;如果当前页面为分类页if (document.title.split(&quot; - &quot;)[0] &#x3D;&#x3D; &quot;分类&quot;) &#123;     &#x2F;&#x2F;选择 ClassName 为 “category row nomargin-x” 的元素    var cate &#x3D; document.getElementsByClassName(&#39;category row nomargin-x&#39;);    &#x2F;&#x2F;定义排列顺序    order &#x3D; [&quot;日影&quot;, &quot;月华&quot;, &quot;星宿&quot;, &quot;共振&quot;, &quot;光辉&quot;]    let temp &#x3D; &quot;&quot;    for (let i &#x3D; 0; i &lt; order.length; i++) &#123; &#x2F;&#x2F;第 i 个分类        for (let ii &#x3D; 0; ii &lt; order.length; ii++) &#123; &#x2F;&#x2F;搜索第 i 个分类所在位置            if (cate[ii].innerHTML.indexOf(order[i]) !&#x3D; -1) &#123;                                &#x2F;&#x2F;将所在位置的 outerHTML 加入 temp                temp &#x3D; temp + cate[ii].outerHTML;             &#125;        &#125;    &#125;    &#x2F;&#x2F;将 temp 写入 category-list    document.getElementsByClassName(&quot;category-list&quot;)[0].innerHTML &#x3D; temp &#125;</code></pre></div></figure><h2 id="效果：使用前"><a href="#效果：使用前" class="headerlink" title="效果：使用前"></a>效果：使用前</h2><p><img src="/resources/blog/22071301/image-20220713181205517.png"></p><h2 id="效果：使用后"><a href="#效果：使用后" class="headerlink" title="效果：使用后"></a>效果：使用后</h2><p><img src="/resources/blog/22071301/image-20220713181243961.png"></p><h1 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h1><h3 id="innerHTML与-outerHTML"><a href="#innerHTML与-outerHTML" class="headerlink" title="innerHTML与 outerHTML"></a>innerHTML与 outerHTML</h3><p>前者包括内部的所有 HTML 内容，但不包括本身的标签，后者包括本身标签。</p><h3 id="document-getElementsByClassName"><a href="#document-getElementsByClassName" class="headerlink" title="document.getElementsByClassName"></a>document.getElementsByClassName</h3><p>使用该方法通过 Class 匹配时，会输出一个伪数组。<br>这也就意味着即便只匹配到了一个元素，你也需要加上 <code>[0]</code></p><h3 id="indexOf"><a href="#indexOf" class="headerlink" title="indexOf"></a>indexOf</h3><p>在字符串中寻找指定字符串，如果未找到则返回 <code>-1</code> ，这里使用这个方法来判断分类名称。</p><h1 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h1><p>感谢 Lingrottin 提供的技术支持。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网站</tag>
+      
+      <tag>博客</tag>
+      
+      <tag>Hexo</tag>
+      
+      <tag>HTML</tag>
+      
+      <tag>DOM</tag>
+      
+      <tag>JavaScript</tag>
+      
+      <tag>算法</tag>
+      
+      <tag>前端</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>使用 Github Actions 实现 Hexo 自动部署</title>
+    <link href="/post/22070901/"/>
+    <url>/post/22070901/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>看到这个标题，你可能会说：我本地生成静态文件了之后再手动上传不是很方便嘛，何必要折腾这么复杂的方法呢？</p><p>但是对我来说，用这套方案还是有很多好处的。</p><ul><li>源文件云端备份到 Github，丢失概率低</li><li>自动进行双端部署（Pages + 服务器），特别是部署到服务器会方便很多</li><li>随时随地，没有电脑也能修改博客内容</li><li>…</li></ul><p>所以就来试试看吧，反正 Actions 不要钱（？</p><h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>首先我们需要了解 Github Actions 的工作原理。</p><p>Github Actions 本质上就是给你提供了一台虚拟服务器，你可以编写一种特殊的脚本来指定这台服务器干些什么。</p><p>我们需要让这台服务器先克隆博客源码的仓库，随后配置 Hexo 运行环境，之后生成静态博客文件，最后发布到 Pages 或推送到我们自己的服务器。</p><h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h3 id="1-新建仓库并上传源码"><a href="#1-新建仓库并上传源码" class="headerlink" title="1. 新建仓库并上传源码"></a>1. 新建仓库并上传源码</h3><p>没什么好说的，把你的博客源文件传上去就好了。</p><h3 id="2-配置-Workflow"><a href="#2-配置-Workflow" class="headerlink" title="2. 配置 Workflow"></a>2. 配置 Workflow</h3><p>新建一个 Workflow，并粘贴下面的代码：</p><figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">name: Hexo Deploymenton:  push:    branches: [main]jobs:  hexo-deployment:    runs-on: ubuntu-latest    env:      TZ: Asia&#x2F;Shanghai    steps:    - name: Checkout source      uses: actions&#x2F;checkout@v2      with:        submodules: true    - name: Setup Node.js      uses: actions&#x2F;setup-node@v1      with:        node-version: &#39;16.15.1&#39;    - name: Install dependencies &amp; Generate static files      run: |        npm i --location&#x3D;global hexo-cli        npm i        hexo clean        hexo g            - name: Deploy to Github Pages      env:        GIT_NAME: （用户名）        GIT_EMAIL: （邮箱）        REPO: （仓库地址，如 github.com&#x2F;akyuu-cn&#x2F;evershifting-fountain）        GH_TOKEN: $&#123;&#123; secrets.GH_TOKEN &#125;&#125;      run: |        cd .&#x2F;public &amp;&amp; git init &amp;&amp; git add .        git config --global user.name $GIT_NAME        git config --global user.email $GIT_EMAIL        git commit -m &quot;Site deployed by GitHub Actions&quot;        git push --force --quiet &quot;https:&#x2F;&#x2F;$GH_TOKEN@$REPO&quot; master:pages</code></pre></div></figure><p><strong>注意：Deploy to Github Pages 步骤中有需要自行修改的内容。</strong></p><h3 id="3-配置-Secrets"><a href="#3-配置-Secrets" class="headerlink" title="3. 配置 Secrets"></a>3. 配置 Secrets</h3><p>打开 Github 用户设置 <code>Developer settings</code> - <code>Personal access tokens</code>，点击 <code>Generate new token</code>，<code>Expiration</code> 选择 <code>no expiration</code>（永不过期），下方勾选 repo 所有权限，然后点击 <code>Generate token</code>。</p><p><img src="/resources/blog/22070901/image-20220715020723669.png"></p><p>把 token 复制下来。</p><p><img src="/resources/blog/22070901/image-20220715020800565.png"></p><p>打开仓库 <code>Settings</code> - <code>Secrets</code> - <code>Actions</code>，点击 <code>New repository secret</code>， <code>Name</code> 填 <code>GH_TOKEN</code>，然后把刚才复制下来的 token 粘贴到 <code>Value</code> 中。</p><p><img src="/resources/blog/22070901/image-20220715020849862.png"></p><h3 id="4-尝试-Commit"><a href="#4-尝试-Commit" class="headerlink" title="4. 尝试 Commit"></a>4. 尝试 Commit</h3><p>任意修改一个文件并提交，理论上博客就会自动被构建并发布到 pages 分支了。</p><p><img src="/resources/blog/22070901/image-20220715021210613.png"></p><h3 id="5-配置-Github-Pages"><a href="#5-配置-Github-Pages" class="headerlink" title="5. 配置 Github Pages"></a>5. 配置 Github Pages</h3><p>点击仓库 <code>Settings</code> - <code>Pages</code>，<code>Source</code> 中 <code>Branch</code> 选择 pages，并填写自定义域名，启用 https。（此处省略 Pages 配置过程）</p><p><img src="/resources/blog/22070901/image-20220715021433391.png"></p><p>这时候打开 Pages 发布的网站，可以顺利访问了。</p><h3 id="EX-发布到个人服务器"><a href="#EX-发布到个人服务器" class="headerlink" title="EX. 发布到个人服务器"></a>EX. 发布到个人服务器</h3><p>这里采用了 Rsync，保证在博客规模较大的时候也能在短时间内完成部署。在 Actions 脚本的最后加入：</p><figure><div class="code-wrapper"><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml">- name: Deploy to server  uses: easingthemes&#x2F;ssh-deploy@v2.2.11  env:    SSH_PRIVATE_KEY: &#39;$&#123;&#123; secrets.SSH_PRIVATE_KEY &#125;&#125;&#39;    ARGS: &quot;-avz --delete&quot;    SOURCE: &quot;public&#x2F;&quot;    REMOTE_HOST: &#39;$&#123;&#123; secrets.SERVER_IP &#125;&#125;&#39;    REMOTE_USER: &#39;root&#39;    TARGET: &#39;（你的网站根目录，如 &#x2F;www&#x2F;wwwroot&#x2F;akyuu-cn）&#39;</code></pre></div></figure><p><strong>注意：TARGET 中的内容需要修改为你自己的。</strong></p><p>新建以下 Secrets：</p><ul><li><code>SSH_PRIVATE_KEY</code> - 用于连接服务器的 SSH KEY</li><li><code>SERVER_IP</code> - 你的服务器 IP</li></ul><p>然后进行一次 Commit，生成好的文件就会自动被上传到服务器网站根目录了。</p><h1 id="如果遇到错误…"><a href="#如果遇到错误…" class="headerlink" title="如果遇到错误…"></a>如果遇到错误…</h1><p>自己去 Actions 里看日志啦（被打</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网站</tag>
+      
+      <tag>博客</tag>
+      
+      <tag>Hexo</tag>
+      
+      <tag>Github</tag>
+      
+      <tag>服务器</tag>
+      
+      <tag>Github Actions</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>小米手表体验心得：学生党的第一块智能手表？</title>
+    <link href="/post/22062701/"/>
+    <url>/post/22062701/</url>
+    
+    <content type="html"><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>在购买这块手表之前，我用了快两年的小米手环5。</p><p>公认的是，小米在手环产品上表现不错，每一代都有很高的热度。小米手环5也是相当合我意的一款产品。但小米手表系列的知名度就没这么高了，大部分人可能根本没听说过这个系列的产品。<br><img src="/resources/blog/22062701/202206271648331.webp"><br>到现在，小米手表才发布了两年，官网就已经下架这款产品了，可见官方也不看好它。不过这也在情理之中，这块手表作为小米进入安卓智能手表行业的第一款实验性产品，被新的产品替代也只是时间问题。<br><img src="/resources/blog/22062701/202206271714445.webp" alt="小米官网唯一剩下的电池换新"><br>所以说，它到底和手环或者大号手环（指智能手表外观、手环功能的缝合怪）有些啥区别？  </p><p>首先，我相信大部分人都听说过 Apple Watch，其功能在当时是领先了其他智能手环、手表很多的。与此同时，安卓阵营智能手表也开始发展，Google 推出了 Android Wear（2018年改名为 Wear OS）。既然都挂了安卓的名了，肯定是能吃到安卓的生态的。因此大部分安卓手表都能安装各种 apk 应用，这一点是 aw 无法触及的。</p><div class="group-image-container"><div class="group-image-row"><div class="group-image-wrap"><img src="/resources/blog/22062701/202206271749256.webp" alt="Apple Watch S3"></div><div class="group-image-wrap"><img src="/resources/blog/22062701/202206271747530.webp" alt="WearOS"></div></div></div><p>正因如此，安卓手表相当值得折腾。当然，折腾只是其中一个目的，最主要的是：它在可以在你没有手机的情况下提供类似于手机的娱乐<del>（说白了就是学校里摸鱼</del></p><p>在综合考虑了价格与需求后，我选择了它——小米手表。</p><p>这块手表从首发到下架，价格一降再降。最终我在海鲜市场以 400 的价格买到了一块几乎全新的在保的小米手表。</p><p><img src="/resources/blog/22062701/202206271743312.webp"></p><h1 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h1><h2 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h2><p>硬件方面，因为发布时间比较早了，性能肯定不如现在的安卓智能手表。但系统界面、大部分优化较好的 APP 都可以流畅运行。</p><h3 id="外观"><a href="#外观" class="headerlink" title="外观"></a>外观</h3><p>我对外观不是很敏感，不过毕竟这玩意抄了 aw （传统艺能），所以总体观感上还是不错的。厚度偏厚，但是不影响佩戴体验。</p><h3 id="屏幕"><a href="#屏幕" class="headerlink" title="屏幕"></a>屏幕</h3><p>小米手表搭载了一块 1.78 英寸，368×448 分辨率的 AMOLED 方屏。其实大部分智能手表都采用了圆屏的设计，也算是继承了传统手表的特性。不过方屏对各种应用的兼容度好，所以我选了方屏。亮度方面，在强光下也是可以看清的，有自动亮度，表现不错。<br><img src="/resources/blog/22062701/202206271827246.webp"></p><h3 id="实体按钮-表冠"><a href="#实体按钮-表冠" class="headerlink" title="实体按钮&amp;表冠"></a>实体按钮&amp;表冠</h3><p>这块手表有一个实体按钮和一个表冠，都在右侧，设计比较合理。<br><img src="/resources/blog/22062701/202206271836773.webp"><br>实体按钮手感相当不错，表冠震动模拟的机械感很强，第一次体验还是很震撼的。但很可惜，大部分第三方应用都不支持表冠输入，毕竟表冠的设计在目前的安卓手表上还不多见。</p><h3 id="网络连接"><a href="#网络连接" class="headerlink" title="网络连接"></a>网络连接</h3><p>支持蓝牙、WLAN、移动数据。蓝牙可以连接蓝牙耳机通话&#x2F;听歌。</p><h3 id="NFC"><a href="#NFC" class="headerlink" title="NFC"></a>NFC</h3><p>对于有需求的人来说就很好用。比如公交卡、门卡。</p><h3 id="eSIM"><a href="#eSIM" class="headerlink" title="eSIM"></a>eSIM</h3><p>对于想买一块可以摸鱼的智能手表的学生党来说，eSIM 或 SIM 卡槽（比较少见了）是必要条件。开通之后与主卡共用流量，共用手机号。手表可以独立流量上网和拨打电话。</p><h3 id="电池"><a href="#电池" class="headerlink" title="电池"></a>电池</h3><p>安卓手表通病，续航普遍只有1-2天。如果是学校摸鱼的话，打开 eSIM 耗电很快，建议自备充电器充电宝。<br>充电是扣分项，很慢。但是具体数值没测过，睡觉不戴的话晚上充电就行，日用肯定没问题。</p><h2 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h2><p>软件方面才是安卓手表更重要的一点，有很多可以折腾的东西。</p><h3 id="APP-连接"><a href="#APP-连接" class="headerlink" title="APP 连接"></a>APP 连接</h3><p>手表可以与“小米穿戴”绑定链接。手机上需要安装 Wear OS by Google。</p><h3 id="基本功能"><a href="#基本功能" class="headerlink" title="基本功能"></a>基本功能</h3><p>运动相关的功能该有的都有。界面设计上也比较好看，表盘相当丰富，甚至有一个叫 <code>AW图文</code> 的表盘可以让你的米表变成真正意义上的aw(?)<br><img src="/resources/blog/22062701/202206271931615.webp"></p><h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>系统自带了很多实用的 APP，同样也是该有的都有。官方的应用商店里有一部分应用，不多。后面有手动安装第三方应用市场的方法。</p><p>微信不支持独立运行，需要蓝牙连接手机，比较鸡肋。QQ 可以独立运行，表现不错。</p><h3 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h3><p>并没有多任务这种东西，所以还是建议少装 app，只保留有用的。如果要清理后台可以去应用管理里停止运行。</p><h1 id="工具-软件推荐"><a href="#工具-软件推荐" class="headerlink" title="工具&#x2F;软件推荐"></a>工具&#x2F;软件推荐</h1><p>评分仅代表个人观点，建议自己多摸索，找到适合自己的应用。</p><h2 id="WearOS-工具箱"><a href="#WearOS-工具箱" class="headerlink" title="WearOS 工具箱"></a>WearOS 工具箱</h2><p><strong>推荐度：⭐⭐⭐⭐⭐</strong></p><p>相当有名的工具箱，免去大量折腾，支持应用安装等功能，支持 Windows &amp; Android。</p><p>官网：<a href="https://www.wearosbox.com/">www.wearosbox.com</a><br><img src="/resources/blog/22062701/202206271930368.webp"></p><h2 id="唯趣应用商店（Etralab）"><a href="#唯趣应用商店（Etralab）" class="headerlink" title="唯趣应用商店（Etralab）"></a>唯趣应用商店（Etralab）</h2><p><strong>推荐度：⭐⭐⭐⭐⭐</strong></p><p>免去电脑&#x2F;手机，直接在手表上浏览安装应用。应用列表相当丰富，有大量适配手表的 APP。</p><p>官网：<a href="http://www.etrasoft.top/">www.etrasoft.top</a><br><img src="/resources/blog/22062701/202206282351264.webp"></p><h2 id="腕上哔哩"><a href="#腕上哔哩" class="headerlink" title="腕上哔哩"></a>腕上哔哩</h2><p><strong>推荐度：⭐⭐⭐⭐⭐</strong></p><p>功能强大的手表端 bilibili。配合腕上视频还可以直接播放，但是更长的视频播放是收费功能。除此以外，还有其他腕上系列 APP，但大部分对我来说都没有很大用处，所以这里只放了腕上哔哩。</p><p>可以在 <code>唯趣应用商店</code> 中下载。<br><img src="/resources/blog/22062701/202206282353049.webp"></p><h2 id="网易云音乐（圆表版）"><a href="#网易云音乐（圆表版）" class="headerlink" title="网易云音乐（圆表版）"></a>网易云音乐（圆表版）</h2><p><strong>推荐度：⭐⭐⭐⭐</strong></p><p>官方应用商店里其实就有网易云音乐，界面美观，歌词功能完善，但是不支持歌单，只能听“我喜欢的音乐”。这对我来说没法忍，所以找到了这个圆表版本的网易云。</p><p>实际使用时没有太大的界面问题，且支持歌单功能，但不支持歌词。还是建议按照个人需求选择。</p><p>下载：<a href="https://wwt.lanzoul.com/iXr2U072wqgj">wwt.lanzoul.com&#x2F;iXr2U072wqgj</a> 或 <a href="https://cloud.akyuu.cn/s/ydcp">PotatoCloud</a><br><img src="/resources/blog/22062701/202206290008806.webp"></p><h2 id="音量管家"><a href="#音量管家" class="headerlink" title="音量管家"></a>音量管家</h2><p><strong>推荐度：⭐⭐⭐⭐⭐</strong></p><p>如果你的蓝牙耳机音量太大或者需要2.5格音量，用它就好了。不过是为手机设计的，界面感人。</p><p>下载：<a href="https://wwt.lanzoul.com/iG5Il072x6va">wwt.lanzoul.com&#x2F;iG5Il072x6va</a> 或 <a href="https://cloud.akyuu.cn/s/BvI3">PotatoCloud</a></p><h2 id="2048"><a href="#2048" class="headerlink" title="2048"></a>2048</h2><p><strong>推荐度：⭐⭐⭐⭐</strong></p><p>好玩。流畅运行，优化好。</p><p>可以在 <code>唯趣应用商店</code> 中下载。<br><img src="/resources/blog/22062701/202206290013030.webp"></p><h2 id="RD-Client（微软远程桌面）"><a href="#RD-Client（微软远程桌面）" class="headerlink" title="RD Client（微软远程桌面）"></a>RD Client（微软远程桌面）</h2><p><strong>推荐度：⭐⭐⭐</strong></p><p>可以用，操作感人。图一乐。</p><p>下载：<a href="https://wwt.lanzoul.com/ixPxt072xdmd">wwt.lanzoul.com&#x2F;ixPxt072xdmd</a> 或 <a href="https://cloud.akyuu.cn/s/RgS8">PotatoCloud</a></p><h2 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a>浏览器</h2><p><strong>推荐度：⭐⭐⭐</strong></p><p><code>唯趣应用商店</code> 里有很多。但是意义不大，性能也不行。</p><h1 id="学生党摸鱼小贴士"><a href="#学生党摸鱼小贴士" class="headerlink" title="学生党摸鱼小贴士"></a>学生党摸鱼小贴士</h1><h2 id="建议携带"><a href="#建议携带" class="headerlink" title="建议携带"></a>建议携带</h2><p><strong>充电宝、充电座</strong>：不然高强度摸鱼撑不了一天。</p><p><strong>蓝牙耳机</strong>：可以听歌哦。</p><h2 id="我应该买小米手表吗"><a href="#我应该买小米手表吗" class="headerlink" title="我应该买小米手表吗"></a>我应该买小米手表吗</h2><p>预算不足可以考虑，否则建议买更好的。</p><h2 id="我应该买安卓手表吗"><a href="#我应该买安卓手表吗" class="headerlink" title="我应该买安卓手表吗"></a>我应该买安卓手表吗</h2><p>首先，你得看学校管不管，严格的学校不让带，就别想了。</p><p>其次，如果你住宿且不让带手机，那么这样的手表可以提供一定的娱乐。</p><p>最后，也是最重要的一点，如果你对自己的自控力没有信心，那么这样的产品不适合你。毕竟一块安卓手表本质上和手机没有什么区别，还是好好学习吧。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>星宿</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>外设</tag>
+      
+      <tag>生活</tag>
+      
+      <tag>数码</tag>
+      
+      <tag>手表</tag>
+      
+      <tag>小米</tag>
+      
+      <tag>Android</tag>
+      
+      <tag>WearOS</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>论如何用 MagicaVoxel 摸一个网站图标</title>
+    <link href="/post/22062001/"/>
+    <url>/post/22062001/</url>
+    
+    <content type="html"><![CDATA[<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>拼凑出 EF 的图案，作为网站的图标。颜色采用了浅蓝与浅红的搭配。<br><img src="/resources/blog/22062001/202206210002743.png"></p><h1 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h1><p>关闭太阳光源，只保留天空光源。<br><img src="/resources/blog/22062001/202206210004411.png"><br>将背景设置为黑色或其他颜色，方便后面处理。<br><img src="/resources/blog/22062001/202206210004145.png"><br>摄影机模式改为 SG，视野改为 1。<br><img src="/resources/blog/22062001/202206261001542.png"><br>打开摄影机标尺，调整到正确视角。<br><img src="/resources/blog/22062001/202206210009704.png"><br>画面降噪，保存图片。<br><img src="/resources/blog/22062001/202206261001726.webp"><br>扔进 PS 抠像，进行压缩等处理。上传到资源服务器，设置为网页图标，大功告成。<br><img src="/resources/blog/22062001/202206210013839.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>日影</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>MagicaVoxel</tag>
+      
+      <tag>3D</tag>
+      
+      <tag>渲染</tag>
+      
+      <tag>设计</tag>
+      
+      <tag>网站</tag>
+      
+      <tag>博客</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>东方CB Live2D 提取与 VTube Studio 简易教程</title>
+    <link href="/post/22061701/"/>
+    <url>/post/22061701/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Live2D-文件下载"><a href="#Live2D-文件下载" class="headerlink" title="Live2D 文件下载"></a>Live2D 文件下载</h1><p>来自 twitter @firubiii 的原帖地址：<a href="https://twitter.com/firubiii/status/1219505315894517760">https://twitter.com/firubiii/status/1219505315894517760</a><br>修改好的模型：<a href="https://wwt.lanzoul.com/itkZN06jwzle">https://wwt.lanzoul.com/itkZN06jwzle</a> 或 <a href="https://cloud.akyuu.cn/s/Dwum">PotatoCloud</a></p><div class="note note-info">            <p>修改过的模型缩略图来自 THBWiki。</p>          </div> <div class="note note-warning">            <p>注意：请不要将这些模型用于商业用途。所有的版权均属于游戏开发商，在此仅作分享。</p>          </div><h1 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h1><h2 id="1-获取-VTube-Studio"><a href="#1-获取-VTube-Studio" class="headerlink" title="1. 获取 VTube Studio"></a>1. 获取 VTube Studio</h2><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><p>Steam 免费获取：<a href="https://store.steampowered.com/app/1325860/VTube_Studio/">https://store.steampowered.com/app/1325860/VTube_Studio&#x2F;</a></p><h3 id="Android-iOS"><a href="#Android-iOS" class="headerlink" title="Android &amp; iOS"></a>Android &amp; iOS</h3><p>在 Google Play &amp; Appstore 免费获取。</p><div class="note note-info">            <p>Android &amp; iOS 端与 Windows 端的免费版均有一些限制。Windows 端面部捕捉会显示水印（但可以用 obs 等工具对捕捉画面进行裁剪，不影响画面效果），Android &amp; iOS 端则会有与电脑串流的限制。且手机端面部捕捉效果不如电脑端，建议直接使用电脑摄像头捕捉 + 渲染。</p>          </div><h2 id="2-导入模型"><a href="#2-导入模型" class="headerlink" title="2. 导入模型"></a>2. 导入模型</h2><p><img src="/resources/blog/22061701/202206171701322.webp"><br><img src="/resources/blog/22061701/202206171702398.webp"><br><img src="/resources/blog/22061701/202206171702389.webp"><br><img src="/resources/blog/22061701/202206171702258.webp"></p><h2 id="3-设置面部捕捉"><a href="#3-设置面部捕捉" class="headerlink" title="3. 设置面部捕捉"></a>3. 设置面部捕捉</h2><p><img src="/resources/blog/22061701/202206171705031.webp"><br><img src="/resources/blog/22061701/202206171706910.webp"><br>配置完就可以通过你的面部来控制人物了。这里还有很多可调的参数，可以自行研究。</p><h2 id="4-打开风的物理效果"><a href="#4-打开风的物理效果" class="headerlink" title="4. 打开风的物理效果"></a>4. 打开风的物理效果</h2><p><img src="/resources/blog/22061701/202206171706116.webp"></p><h2 id="5-播放动作"><a href="#5-播放动作" class="headerlink" title="5. 播放动作"></a>5. 播放动作</h2><p><img src="/resources/blog/22061701/202206171707413.webp"><br><img src="/resources/blog/22061701/202206171707768.webp" alt="这套模型的动画都是统一的，可以自己尝试一下每个动画"><br><img src="/resources/blog/22061701/202206171708122.webp"><br><img src="/resources/blog/22061701/202206171708532.webp" alt="按下设置的快捷键后人物就会做出动作啦"></p><h2 id="6-输出画面到虚拟摄像头-OBS"><a href="#6-输出画面到虚拟摄像头-OBS" class="headerlink" title="6. 输出画面到虚拟摄像头 &#x2F; OBS"></a>6. 输出画面到虚拟摄像头 &#x2F; OBS</h2><h3 id="虚拟摄像头（建议新手使用）"><a href="#虚拟摄像头（建议新手使用）" class="headerlink" title="虚拟摄像头（建议新手使用）"></a>虚拟摄像头（建议新手使用）</h3><p><img src="/resources/blog/22061701/202206171716839.webp"><br><img src="/resources/blog/22061701/202206171724921.webp"></p><h3 id="OBS"><a href="#OBS" class="headerlink" title="OBS"></a>OBS</h3><p><img src="/resources/blog/22061701/202206171722593.webp"><br><img src="/resources/blog/22061701/202206171722503.webp"><br><img src="/resources/blog/22061701/202206171722056.webp"><br><img src="/resources/blog/22061701/202206171722155.webp"><br><img src="/resources/blog/22061701/202206171722295.webp"><br><img src="/resources/blog/22061701/202206171722871.webp"></p><h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h3 id="Q：手部模型重叠？"><a href="#Q：手部模型重叠？" class="headerlink" title="Q：手部模型重叠？"></a>Q：手部模型重叠？</h3><p>A：清添加并触发一个动作，或者也可以只保留上半身。</p><h3 id="Q：性能问题？"><a href="#Q：性能问题？" class="headerlink" title="Q：性能问题？"></a>Q：性能问题？</h3><p>A：降低画面分辨率和帧数、面部识别帧数、摄像头分辨率等。</p><h3 id="Q：面捕不够细致？"><a href="#Q：面捕不够细致？" class="headerlink" title="Q：面捕不够细致？"></a>Q：面捕不够细致？</h3><p>A：在面部捕捉设置中将 <code>摄像头输入模式</code> 改为 <code>手动模式（B）</code> 。</p><h3 id="Q：其他问题？"><a href="#Q：其他问题？" class="headerlink" title="Q：其他问题？"></a>Q：其他问题？</h3><p>A：在下面留言或者问百度。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>东方Project</tag>
+      
+      <tag>Live2D</tag>
+      
+      <tag>VTube Studio</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>C# 控制台程序打包独立 exe</title>
+    <link href="/post/21082301/"/>
+    <url>/post/21082301/</url>
+    
+    <content type="html"><![CDATA[<p>因为我有一个小项目，但编译出来发现有很多文件，太麻烦。所以我摸索了好久的单exe打包，但网上的方法不是不能用就是过时了。经过外网资料查阅，发现了这个最简单的方法。</p><p>右键项目，选择<strong>发布</strong>。</p><p><img src="/resources/blog/21082301/1.webp"></p><p>完成初步配置来到这个界面，部署模式选择<strong>依赖框架</strong>，并选择运行平台后进行编译即可。</p><p><img src="/resources/blog/21082301/2.webp"></p><p>把编译出来的exe复制到其他地方，可以独立运行，此时就可以发布了。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>开发</tag>
+      
+      <tag>软件</tag>
+      
+      <tag>C#</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>垃圾佬必修课之 DIY屏幕</title>
+    <link href="/post/21072901/"/>
+    <url>/post/21072901/</url>
+    
+    <content type="html"><![CDATA[<h2 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h2><p>前几天和朋友聊天的时候，突然聊起关于DIY屏幕的事。之前我就了解过这玩意，再加上最近想用两个屏幕来支持开发，就决定去试试。  </p><p>直接去购买所需要的材料。首先是屏幕和套件，这些都是很好找的，我买的屏幕是一块1080p 15.6寸的瑕疵屏（两角发白，对显示效果影响不大）。然后就是外壳了，我决定用微积木来搭，所以一共买了3500块微积木。  </p><p>总共的成本是：225 + 47.85 &#x3D; 272.85</p><p>屏幕长这样：<img src="/resources/blog/21072901/1.webp"></p><p>大概不算贵吧？<del>（我没买亏吧？？</del></p><h2 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h2><p>在购买积木之前，我决定先画张设计图纸。我用了<a href="https://ephtracy.github.io/">MagicaVoxel</a>导入了所有提供的颜色并完成了设计的步骤，15.6寸的屏幕的尺寸为 54x34 。效果图长这样：</p><p><img src="/resources/blog/21072901/2.webp"></p><p><img src="/resources/blog/21072901/3.webp"></p><p>设计完成后，就可以开始计算用量了。店家的积木从200颗起售，所以稍微超出了一点用量。留出一部分冗余是有必要的，万一突然就改变想法了呢？</p><hr><p><img src="/resources/blog/21072901/4.webp"></p><p>快递总算是到了，看到这一箱积木就知道要花多少时间了。我拼装积木的时间加起来大约有8小时左右（背板+外壳），费时还废手，比我想象中的更累人。不过最后还是完成了背板的制作。</p><p><img src="/resources/blog/21072901/5.webp"></p><p><img src="/resources/blog/21072901/6.webp"></p><p><img src="/resources/blog/21072901/7.webp"></p><p><img src="/resources/blog/21072901/8.webp"></p><p>如果光看这么几张图，可能看上去很轻松，但实际上很麻烦。店家还卖一个小锤子，如果你家里没有类似的锤状物（？的话，建议买一个。此外，从方形凹槽的一面按积木会更省力，也能更好地保护手指。</p><hr><p>然后是屏幕，因为屏幕是易碎品，如果快递寄碎了但你没有检查，可能会导致一些不必要的麻烦。所以建议当面签收或者录一段从取包裹到开包的全过程视频，不过这样的易碎品快递公司也不会这么不注意就是了。我的屏幕在运输过程中并没有出什么问题。  </p><p><img src="/resources/blog/21072901/9.webp"></p><p>直接接上线进行第一次测试。</p><p><img src="/resources/blog/21072901/10.webp"></p><p>一切正常，接下来就可以开始拼外壳了。我决定把驱动板外置，所以外壳厚度只有4积木。</p><p><img src="/resources/blog/21072901/11.webp"></p><p><img src="/resources/blog/21072901/12.webp"></p><p><img src="/resources/blog/21072901/13.webp"></p><p>后来我发现屏幕装到外壳里有点松动，所以想了个绝妙的办法——</p><p><img src="/resources/blog/21072901/14.webp"></p><p><img src="/resources/blog/21072901/15.webp"></p><p>上次用剩下的魔术贴！！ <del>（梦 幻 联 动）</del></p><p>效果挺棒的，不过积木似乎有些变形（后来装上背板就好了）。接下来就是接排线和装背板了。</p><p><img src="/resources/blog/21072901/16.webp"></p><p><img src="/resources/blog/21072901/17.webp"></p><p>这里有个坑，排线插上之后记得贴上一层胶带，不然可能会导致接触不良。</p><p><img src="/resources/blog/21072901/18.webp"></p><p>到这里就算是组装完成了。</p><p><img src="/resources/blog/21072901/19.webp"></p><p>不过我决定做一个支架，虽然大部分人都是直接靠在墙上的，但因为我希望它能和笔记本屏幕持平，所以选择了支架的设计。不得不说，积木比我想的要牢固的多。</p><p><img src="/resources/blog/21072901/20.webp"></p><p><img src="/resources/blog/21072901/21.webp"></p><p>（这个结构并不是很稳，所以后来我重新设计了一个）<del>（有点像鸭子</del></p><p><img src="/resources/blog/21072901/22.webp"></p><hr><p>之后我就开始调整屏幕参数。这个屏幕有一个缺点就是亮度不可调，虽然我也不确定这是屏幕还是驱动板的问题。按照店家的说法，只能调对比度。经过一番调试，算是得到了一个还行的显示效果，但效果远不如笔记本自带的屏幕（据说受驱动板限制）。  </p><p>除了显示器OSD里的设置（这个驱动板的OSD真的很简陋）外，你也可以找找对应输出显卡的画面设置，或WIN+R，输出DCCW进行颜色矫正。</p><p>最后调色效果也只能说还行，至少色差没那么明显了<del>（明明还是很明显</del></p><p><img src="/resources/blog/21072901/23.webp"></p><hr><p>最后就是藏线路了，因为我没有把驱动板装进屏幕里，所以我用了一个小盒子装驱动板并开了孔。</p><p><img src="/resources/blog/21072901/24.webp"></p><p><img src="/resources/blog/21072901/25.webp"></p><p><img src="/resources/blog/21072901/26.webp"></p><p>为了藏这个盒子和电源适配器，我在屏幕后面拼了一个小平台。</p><p><img src="/resources/blog/21072901/27.webp"></p><p>至此，整个DIY显示器就算是制作完成了，除了还能改进的HDMI线，新线送到之后就会替换。最后的效果还是很令人满意的。</p><p><img src="/resources/blog/21072901/28.webp"></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这样一个副屏可以干很多事情，可以用来预览视频，用来调试代码，用来挂在线视频或是音乐。但是DIY显示器绝对不是最优解，如果你只想要以上的这些功能，那我建议你还是买现成的。</p><p>整个制作过程非常费时费力，需要耐心，成本或许也不会省多少，而且问题也不少。<strong>但解决问题不正是DIY的乐趣之一吗？</strong></p><p><img src="/resources/blog/21072901/29.webp"></p><h2 id="2022年7月6日-补充"><a href="#2022年7月6日-补充" class="headerlink" title="2022年7月6日 补充"></a>2022年7月6日 补充</h2><p>坏了，多了条白线（</p><p><img src="/resources/blog/21072901/30.webp"></p><p>所以除非你很想折腾，不然就别上车了（</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>月华</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>DIY</tag>
+      
+      <tag>外设</tag>
+      
+      <tag>屏幕</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>PotatoCraftCommunity - 帮助文档</title>
+    <link href="/post/21041801/"/>
+    <url>/post/21041801/</url>
+    
+    <content type="html"><![CDATA[<h1 id="PotatoCraftCommunity"><a href="#PotatoCraftCommunity" class="headerlink" title="PotatoCraftCommunity"></a>PotatoCraftCommunity</h1><p><font size=5><strong>欢迎来到 PCC！</strong>  </font><br><font size=4>这是一个完全由社区<del>指我自己</del>运营的白名单服务器。<br>由于教程过长，所以写了这份<strong>帮助文档</strong>。</font>  </p><hr><p><font size=5>目录</font></p><ul><li><a href="#/pc_stuck">&#x2F;pc_stuck</a></li><li><a href="#/sf_guide">&#x2F;sf guide</a></li><li><a href="#/pc_afk_%E4%B8%8E_/pc_back">&#x2F;pc_afk 与 &#x2F;pc_back</a></li><li><a href="#/pc_jukebox">&#x2F;pc_jukebox</a></li><li><a href="#/pc_startbackup">&#x2F;pc_startbackup</a></li><li><a href="#/pc_sfunlock">&#x2F;pc_sfunlock</a></li><li><a href="#%E5%AE%B9%E5%99%A8%E6%95%B4%E7%90%86">容器整理</a></li><li><a href="#%E6%96%B9%E5%9D%97%E4%BF%A1%E6%81%AF%E6%9F%A5%E8%AF%A2">方块信息查询</a></li><li><a href="#%E4%B8%80%E4%BA%9B%E6%9D%90%E8%B4%A8%E5%8C%85">一些材质包</a></li><li><a href="#%E6%8F%92%E4%BB%B6_-_Brewery">插件 - Brewery</a></li><li><a href="#%E6%8F%92%E4%BB%B6_-_SFCalc">插件 - SFCalc</a></li><li><a href="#%E6%8F%92%E4%BB%B6_-_Imagemap">插件 - Imagemap</a></li><li><a href="#%E6%8F%92%E4%BB%B6_-_Inventory_Rollback">插件 - Inventory Rollback</a></li><li><a href="#%E6%8F%92%E4%BB%B6_-_AllMusic">插件 - AllMusic</a></li><li><a href="#PCC%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%90%91%E6%89%80%E6%9C%89%E4%BA%BA%E5%BC%80%E6%94%BE%EF%BC%81">PCC服务端向所有人开放！</a></li></ul><hr><p><span id="/pc_stuck"></span></p><h3 id="pc-stuck"><a href="#pc-stuck" class="headerlink" title="&#x2F;pc_stuck"></a>&#x2F;pc_stuck</h3><p>回到世界<strong>出生点</strong>，如果你卡在什么地方了的话。  </p><hr><p><span id="/sf_guide"></span></p><h3 id="sf-guide"><a href="#sf-guide" class="headerlink" title="&#x2F;sf guide"></a>&#x2F;sf guide</h3><p>获取一本<strong>粘液科技手册</strong>！  </p><hr><p><span id="/pc_afk_与_/pc_back"></span></p><h3 id="pc-afk-与-pc-back"><a href="#pc-afk-与-pc-back" class="headerlink" title="&#x2F;pc_afk 与 &#x2F;pc_back"></a>&#x2F;pc_afk 与 &#x2F;pc_back</h3><p><strong>&#x2F;pc_afk</strong>：传送到afk维度。<br><strong>&#x2F;pc_back</strong>：返回afk前的位置。  </p><hr><p><span id="/pc_jukebox"></span></p><h3 id="pc-jukebox"><a href="#pc-jukebox" class="headerlink" title="&#x2F;pc_jukebox"></a>&#x2F;pc_jukebox</h3><p>打开<strong>红石音乐盒</strong>界面。<br>如果你有<strong>nbs</strong>或者<strong>midi</strong>文件，可以发给我进行添加。  </p><hr><p><span id="/pc_startbackup"></span></p><h3 id="pc-startbackup"><a href="#pc-startbackup" class="headerlink" title="&#x2F;pc_startbackup"></a>&#x2F;pc_startbackup</h3><p>启动一次<strong>手动备份</strong>。<br>如果你要干什么<strong>危险的事情</strong>的话。  </p><hr><p><span id="/pc_sfunlock"></span></p><h3 id="pc-sfunlock"><a href="#pc-sfunlock" class="headerlink" title="&#x2F;pc_sfunlock"></a>&#x2F;pc_sfunlock</h3><p>解锁粘液科技的<strong>所有研究</strong>。<br>由于经验解锁过于浪费时间和肝，我们决定直接开放这个功能。</p><hr><p><span id="容器整理"></span></p><h3 id="容器整理"><a href="#容器整理" class="headerlink" title="容器整理"></a>容器整理</h3><p>在容器的空格中<strong>shift+右键</strong>更改整理触发方式。<br>在容器的空格中<strong>shift+左键</strong>更改容器整理依据。  </p><hr><p><span id="方块信息查询"></span></p><h3 id="方块信息查询"><a href="#方块信息查询" class="headerlink" title="方块信息查询"></a>方块信息查询</h3><p>手持<strong>木棍</strong>对方块右击可查看信息。<br>支持粘液科技的单方块。  </p><hr><p><span id="一些材质包"></span></p><h3 id="一些材质包"><a href="#一些材质包" class="headerlink" title="一些材质包"></a>一些材质包</h3><p><strong>强烈推荐</strong>，提高SF插件、红石音乐的体验。 <a href="https://1drv.ms/u/s!AqOs8f_MzRh_lArD9J7Z3txY4nc9?e=ypBUD5">Onedrive</a> 或 <a href="https://lanzoui.com/imWx4o8ip5a">蓝奏云</a> 或 <a href="https://cloud.akyuu.cn/s/l4Uk">PotatoCloud</a></p><hr><p><span id="插件_-_Brewery"></span></p><h3 id="插件-Brewery"><a href="#插件-Brewery" class="headerlink" title="插件 - Brewery"></a>插件 - Brewery</h3><p>添加了<strong>酿酒系统</strong>，玩法较复杂，可自行查阅<a href="https://github.com/DieReicheErethons/Brewery/wiki">官方wiki</a>。<br><del>好孩子不能喝酒哦（</del></p><hr><p><span id="插件_-_SFCalc"></span></p><h3 id="插件-SFCalc"><a href="#插件-SFCalc" class="headerlink" title="插件 - SFCalc"></a>插件 - SFCalc</h3><p>用于计算<strong>SF4物品合成</strong>所需材料总和。<br>用法： <strong>&#x2F;sfcalc calc [物品]</strong><br>提示： 如果你找不到<strong>物品的英文名</strong>，可以使用 <strong>&#x2F;sf give [你的ID]</strong> 并使用<strong>tab补全</strong>或<strong>直接输入关键词搜索</strong>。</p><hr><p><span id="插件_-_Imagemap"></span></p><h3 id="插件-Imagemap"><a href="#插件-Imagemap" class="headerlink" title="插件 - Imagemap"></a>插件 - Imagemap</h3><p>自动生成<strong>地图画</strong>并放置在世界中。</p><ol><li>裁剪图片：长度、宽度设置为<strong>128的倍数</strong>，每128x128会被生成为一张地图。<br><code>例如：一张256x128的图片会在游戏内转换为长2格、宽1格的地图墙</code></li><li>上传到图床：比如 <a href="https://imgtu.com/">imgtu</a> 。</li><li>从图床获取链接：以<strong>上面的图床</strong>为例，复制这个链接即可<strong>（可以检查结尾是否为.jpg&#x2F;.png）</strong>。<br><img src="/resources/blog/21041801/imgurl.webp" alt="获取链接"></li><li>游戏内下载图片：执行 <strong>&#x2F;imagemap download [名称] [图片URL链接]</strong></li><li>放置地图画：执行 <strong>&#x2F;imagemap list</strong> ，并<strong>鼠标点击</strong>右方的<strong>Place</strong>，<strong>右击</strong>墙面的<strong>左上角</strong>即可。<br>提示： 地图画需要<strong>手动清理</strong>，建议放之前检查一遍。</li></ol><hr><p><span id="插件_-_Inventory_Rollback"></span></p><h3 id="插件-Inventory-Rollback"><a href="#插件-Inventory-Rollback" class="headerlink" title="插件 - Inventory Rollback"></a>插件 - Inventory Rollback</h3><p>自动备份<strong>玩家信息</strong>（物品栏、血量、经验、末影箱等），并在<strong>意外发生时</strong>进行恢复。<br>会在四种情况下触发备份：</p><ul><li>玩家死亡</li><li>玩家加入游戏</li><li>玩家退出游戏</li><li>玩家切换世界</li></ul><p>你也可以使用 <strong>&#x2F;ir forcebackup [玩家]</strong> 强制备份这个玩家的信息。<br>如果要进行<strong>回滚</strong>（恢复玩家信息），输入 <strong>&#x2F;ir restore [玩家]</strong> 打开GUI进行恢复操作。</p><hr><p><span id="插件_-_AllMusic"></span></p><h3 id="插件-AllMusic"><a href="#插件-AllMusic" class="headerlink" title="插件 - AllMusic"></a>插件 - AllMusic</h3><p>在游戏内通过<strong>网易云音乐</strong>点歌，安装了mod的玩家都可以收听。<br>点歌： <strong>&#x2F;music [音乐URL]</strong><br>切换界面显示： <strong>&#x2F;pcc_allmusic_hud</strong><br>切换歌词显示（默认隐藏）： <strong>&#x2F;music hud enable lyric</strong><br>停止接受点歌推送： <strong>&#x2F;music nomusic</strong><br>下载mod：<a href="https://wwe.lanzoui.com/iTIWNqqbp8b">Fabric</a> <a href="https://wwe.lanzoui.com/iaK6zqqbp9c">Forge</a><br>在<strong>游戏音量设置</strong>中可以调整音量。</p><hr><p><span id="PCC服务端向所有人开放！"></span></p><h3 id="PCC服务端向所有人开放！"><a href="#PCC服务端向所有人开放！" class="headerlink" title="PCC服务端向所有人开放！"></a>PCC服务端向所有人开放！</h3><p>你可以在 <a href="https://wwe.lanzoui.com/iSlnsqq8muh">这里</a> 或 <a href="https://cloud.akyuu.cn/s/5WTE">PotatoCloud</a> 下载PCC的服务端插件，我们完全允许<strong>任何人</strong>用这个服务端开设服务器。请注意，Slimefun4及其<strong>多数</strong>拓展已汉化，<strong>部分来自我自己，也有部分来自其他的汉化者。</strong>因此无法注明汉化者，请见谅。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>光辉</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Minecraft</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>简易网易云音乐下载工具</title>
+    <link href="/post/21030501/"/>
+    <url>/post/21030501/</url>
+    
+    <content type="html"><![CDATA[<h1 id="NCM-Downloader"><a href="#NCM-Downloader" class="headerlink" title="NCM_Downloader"></a>NCM_Downloader</h1><p>简易网易云音乐下载工具<br>可绕过付费下载歌曲（不支持需要 vip 才能听的曲子）  </p><h2 id="为什么我要写这个垃圾软件"><a href="#为什么我要写这个垃圾软件" class="headerlink" title="为什么我要写这个垃圾软件"></a>为什么我要写这个垃圾软件</h2><p>因为我想学学 cpp，还有方便自己用，就这样<br>我知道我写的很烂（</p><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><code>https://music.163.com/song/media/outer/url?id=[歌曲ID]</code><br>通过输入的歌曲 ID 和基础链接拼接<br>最后再获取上述链接的文件<br>就这么简单  </p><h2 id="Github源码"><a href="#Github源码" class="headerlink" title="Github源码"></a>Github源码</h2><p><a href="https://github.com/Ltfjx/NCM_Downloader/">https://github.com/Ltfjx/NCM_Downloader/</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>共振</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>开发</tag>
+      
+      <tag>软件</tag>
+      
+      <tag>C++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  
+</search>

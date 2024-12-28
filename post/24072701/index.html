@@ -1,0 +1,881 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head><!-- hexo injector head_begin start --><script src="/resources/live2d/autoload.js"></script><script type="module" src="/resources/js/devtools_detect.js"></script><!-- hexo injector head_begin end -->
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/resources/pictures/evershifting_fountain.png">
+  <link rel="icon" href="/resources/pictures/evershifting_fountain.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#FF7340">
+  <meta name="author" content="RLt">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近用 300r 的预算手工制作了一个 Kigurumi 头壳，如果你也有兴趣的话，这里有一些心得。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次自制 Kigurumi 头壳">
+<meta property="og:url" content="https://blog.akyuu.cn/post/24072701/index.html">
+<meta property="og:site_name" content="Evershifting Fountain">
+<meta property="og:description" content="最近用 300r 的预算手工制作了一个 Kigurumi 头壳，如果你也有兴趣的话，这里有一些心得。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akyuu.cn/resources/blog/24072701/cover.webp">
+<meta property="article:published_time" content="2024-07-27T04:09:00.000Z">
+<meta property="article:modified_time" content="2024-12-28T18:46:36.309Z">
+<meta property="article:author" content="RLt">
+<meta property="article:tag" content="DIY">
+<meta property="article:tag" content="3D 打印">
+<meta property="article:tag" content="Kigurumi">
+<meta property="article:tag" content="Cosplay">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://blog.akyuu.cn/resources/blog/24072701/cover.webp">
+  
+  
+  
+  
+    
+    
+  <title>记一次自制 Kigurumi 头壳 - Evershifting Fountain</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/resources/css/fontawsome.all.min.css">
+<link rel="stylesheet" href="/resources/css/font.css">
+<link rel="stylesheet" href="/resources/css/navbar.css">
+<link rel="stylesheet" href="/resources/css/codeblock.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.akyuu.cn","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false,"scope":["home"],"autoInsertCss":true},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"#"},"progressbar":{"enable":false,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":2},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"0e3f147047e2b25b1049190c971b4d09","google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?0e3f147047e2b25b1049190c971b4d09";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <div class="navbar-brand">
+        
+	<img class="navbar-logo" src="/resources/pictures/evershifting_fountain.png" srcset="/img/loading.gif" lazyload />
+	
+        <strong>Evershifting Fountain | 万象泉</strong>
+      </div>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://akyuu.cn/" target="_self">
+                <i class="iconfont icon-bookmark-fill"></i>
+                <span>主站</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+
+<div id="banner" class="banner" parallax=true>
+  <div class="full-bg-img text-center">
+  
+
+  
+
+     
+    <div class="jparallax-layer" 
+      style="background-image: url('/resources/blog/24072701/banner.webp');height:100%; width:100%;"></div>
+      
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="banner-text text-center fade-in-up">
+            <div class="h2">
+              
+                <span id="subtitle">记一次自制 Kigurumi 头壳</span>
+              
+
+            </div>
+            
+              
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        RLt
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-27 12:09" pubdate>
+          2024年7月27日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+            
+          </div>
+          
+      
+        </div>
+      </div>
+  
+
+</div>
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">记一次自制 Kigurumi 头壳</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="缘起（一些闲话）"><a href="#缘起（一些闲话）" class="headerlink" title="缘起（一些闲话）"></a>缘起（一些闲话）</h1><p>今年年初的时候，我买了一台 FDM 3D 打印机来玩，来自拓竹的 A1。作为入门级机型算是相当不错的了。</p>
+<p><img src="/../resources/blog/24072701/1.webp" srcset="/img/loading.gif" lazyload></p>
+<p>那么既然已经花了大价钱买了台 3D 打印机，肯定是要拿它来整点活出来的。所以在花了一些时间熟悉了切片、材料、打印机工作流程等知识后，我终于是打算开始做点大项目了。  </p>
+<p><img src="/../resources/blog/24072701/2.webp" srcset="/img/loading.gif" lazyload></p>
+<p>说起来也巧，刚进入大学的第一年，我结识了不少朋友与同好。其中就有一位 Kigurumi 玩家，也算是我初次了解到 Kigurumi 这个社区。在初步了解了之后，我也有了整一个来玩的打算，果断打开电商平台一看，好家伙，四位数起步，<del>告辞（</del></p>
+<p>然而作为一个喜欢折腾的人，我当然还有另一个选择，那就是：自制。</p>
+<p>于是我就这么踏上了自制 Kigurumi 头壳的旅程（</p>
+<p>而在这其中，头壳白模，正好可以用刚学来的 3D 打印制作，那接下来的步骤就比较清晰了。理论可行，实践开始！</p>
+<h1 id="预算"><a href="#预算" class="headerlink" title="预算"></a>预算</h1><p>下面列举了我本次制作所使用的预算，仅供参考。</p>
+<ul>
+<li>头壳 <strong>~250r</strong><ul>
+<li>打印耗材 50r（如果没有 3D 打印机，则需要更高的价格来获取白模）</li>
+<li>假发 42r</li>
+<li>B603 消光漆 39r</li>
+<li>水补土 30r</li>
+<li>色漆 15r</li>
+<li>砂纸 10r</li>
+<li>金属件 10r</li>
+<li>颜料 11r</li>
+<li>PVC 网 4r</li>
+<li>不织布 13r</li>
+<li>海绵 10r</li>
+<li>磁铁 2r</li>
+<li>魔术贴 8r</li>
+</ul>
+</li>
+<li>Kigurumi 皮 <strong>~380r</strong></li>
+<li>Cosplay 服饰 &amp; 各种饰品 <strong>~400r</strong></li>
+</ul>
+<p><strong>共计 1k 左右。</strong></p>
+<h1 id="头壳制作"><a href="#头壳制作" class="headerlink" title="头壳制作"></a>头壳制作</h1><p>下面是详细的制作过程，如果你想作为参考的话，建议完整看一遍内容，再着手制作。</p>
+<h2 id="0-角色的选择"><a href="#0-角色的选择" class="headerlink" title="0. 角色的选择"></a>0. 角色的选择</h2><p>在开工之前，先挑一个你想做的角色吧。如果对自己的水平不自信的话，可以挑一个做起来比较简单的（</p>
+<p>我这次选择的角色 <strong>稗田阿求（东方 Project)</strong> 算是比较好上手的了，发型简单，发饰简单，并没什么特别的细节。</p>
+<p><img src="/../resources/blog/24072701/84458519_p0.webp" srcset="/img/loading.gif" lazyload alt="pixiv_id=84458519"></p>
+<h2 id="1-制作白模"><a href="#1-制作白模" class="headerlink" title="1. 制作白模"></a>1. 制作白模</h2><h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>白模的模型的获取实际上是一件比较麻烦的事情，并不是所有人都有合格的美术和建模基础。但好在有前辈分享了一些免费开源的头壳模型，给了刚入门自制头壳的玩家一个非常好的选择，在此感谢这些分享者们。</p>
+<p>这里是一些我找到的开源头壳模型（仅为一小部分）：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.thingiverse.com/thing:5316376">https://www.thingiverse.com/thing:5316376</a> (@Leide)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vuicoo/plumKigurumi-">https://github.com/vuicoo/plumKigurumi-</a> (@vuicoo)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/AEMShana/ArisakaMashiroKigurumi">https://github.com/AEMShana/ArisakaMashiroKigurumi</a> (@AEMShana)</li>
+</ul>
+<p>在选择头壳模型的时候，需要注意以下几点：</p>
+<ul>
+<li><p><strong>头围</strong><br> 至少要保证头壳适用头围大于等于你的头围，不然头壳做出来戴不上去就麻烦了。就算头壳头围比你的头围大也没关系，后续可以通过海绵调整。</p>
+</li>
+<li><p><strong>头壳类型（半面、3&#x2F;4 头、全头）</strong><br> 半面制作成本低，但呈现效果并不算太好，如果是自己做的话并不推荐。后两者则效果相差不大，全头相对更好一点，但是也会更热，可以自行衡量二者。</p>
+</li>
+<li><p><strong>脸型</strong><br> 如果你选择了能进行脸型自定义的模型的话，可以花点时间为角色选一个适合的脸型。</p>
+</li>
+</ul>
+<h3 id="关于打印机的构建尺寸"><a href="#关于打印机的构建尺寸" class="headerlink" title="关于打印机的构建尺寸"></a>关于打印机的构建尺寸</h3><p>我手上这台打印机的构建尺寸为 256mm^3，属于勉强足够打印头壳的尺寸。如果你的打印机构建尺寸小于 256mm^3 的话，可能就需要考虑分件或直接找代打了。</p>
+<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>我这次制作的头壳使用了 @Leide 大佬的模型，下面是我切片的方式，仅供参考。</p>
+<h4 id="前壳"><a href="#前壳" class="headerlink" title="前壳"></a>前壳</h4><blockquote>
+<p>打印头：0.4<br>层高：0.2<br>支撑：标准、仅打印板<br>支撑屏蔽：左右两侧的各个孔洞<br>墙层数：3</p>
+</blockquote>
+<p><img src="/../resources/blog/24072701/3.webp" srcset="/img/loading.gif" lazyload></p>
+<h4 id="后壳"><a href="#后壳" class="headerlink" title="后壳"></a>后壳</h4><blockquote>
+<p>打印头：0.4<br>层高：0.2<br>支撑：标准、仅打印板<br>墙层数：3<br>切分：中间切开、栓连接</p>
+</blockquote>
+<p>由于全头后壳比较大，而且对外观没有太大的需求，所以这里我选择了切分打印。</p>
+<p><img src="/../resources/blog/24072701/4.webp" srcset="/img/loading.gif" lazyload></p>
+<h3 id="耗材的选择"><a href="#耗材的选择" class="headerlink" title="耗材的选择"></a>耗材的选择</h3><p>能用光固化打自然是最好的，但 FDM 也没问题。我选择了 PETG 作为打印材料，但后续发现 PETG 打磨起来很费力。所以这里我更推荐使用 PLA，虽然会牺牲一定的强度，但能让打磨过程比较轻松。</p>
+<h3 id="开始打印！"><a href="#开始打印！" class="headerlink" title="开始打印！"></a>开始打印！</h3><p>一切就绪之后，接下来就交给 3D 打印机吧。把打印机放到一个不会被打断的地方，然后静静等待即可。</p>
+<p><img src="/../resources/blog/24072701/5.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-头壳所需的金属件"><a href="#2-头壳所需的金属件" class="headerlink" title="2. 头壳所需的金属件"></a>2. 头壳所需的金属件</h2><p>在等待头壳打印的时候，可以打开购物平台购买一些需要的材料了。</p>
+<p>一般的头壳都会有两处需要金属件连接的地方：</p>
+<ul>
+<li>顶部转轴</li>
+<li>左右两侧的卡扣</li>
+</ul>
+<p>详细的参数可以参考模型的说明，我使用的这个模型需要：</p>
+<ul>
+<li>M4*60 半牙螺栓 *1</li>
+<li>M3 螺丝+螺母 *4</li>
+<li>中箱扣 3018 *2</li>
+</ul>
+<h2 id="3-组装头壳"><a href="#3-组装头壳" class="headerlink" title="3. 组装头壳"></a>3. 组装头壳</h2><p>使用事先准备的连接栓进行定位，然后往缝隙中填入 502 胶水进行固定，最后装上卡扣，后壳就准备完毕了。<br><img src="/../resources/blog/24072701/6.webp" srcset="/img/loading.gif" lazyload></p>
+<p>在前壳上装上卡扣的另一部分，然后将顶部连接螺丝安装到位，头壳就组装完成了。<br><img src="/../resources/blog/24072701/7.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="4-补土-打磨-喷漆"><a href="#4-补土-打磨-喷漆" class="headerlink" title="4. 补土&amp;打磨&amp;喷漆"></a>4. 补土&amp;打磨&amp;喷漆</h2><p>这可能是对于初次制作头壳的玩家来说最难的一步了，具体操作可以参考 <a target="_blank" rel="noopener" href="https://how.kig.land/DIY/Tips-for-painting">这篇教程</a> 以及网上的各种自喷漆视频教程，这里我只写一些原文没提到的东西。</p>
+<h3 id="低成本的喷漆选择"><a href="#低成本的喷漆选择" class="headerlink" title="低成本的喷漆选择"></a>低成本的喷漆选择</h3><p>对于想要低成本制作头壳的玩家来说，郡士的自喷漆价格有点偏贵。经过我的实践，以下是一个可行的低成本喷漆方案：<br><code>水补土 -&gt; 打磨 -&gt; 三和 40#白色（也可以用白色水补土替代） -&gt; 三和 313#浅粉色 -&gt; 消光漆</code></p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><strong>不要在喷漆没干的时候接触漆面！</strong></li>
+<li>不要在高湿度天气下使用消光漆！</li>
+<li>注意个人防护</li>
+</ol>
+<p><img src="/../resources/blog/24072701/8.webp" srcset="/img/loading.gif" lazyload alt="补土"><br><img src="/../resources/blog/24072701/9.webp" srcset="/img/loading.gif" lazyload alt="白色底漆"><br><img src="/../resources/blog/24072701/10.webp" srcset="/img/loading.gif" lazyload alt="肤色漆"></p>
+<h2 id="5-面妆"><a href="#5-面妆" class="headerlink" title="5. 面妆"></a>5. 面妆</h2><p>这一步是可选的，合适的面妆能给头壳增加生动感。</p>
+<p>不过不管怎么说，嘴唇部分还是建议画一下的。直接使用丙烯颜料，调一个合适的颜色，然后往头壳上画一笔即可。<br><img src="/../resources/blog/24072701/11.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="6-眼片"><a href="#6-眼片" class="headerlink" title="6. 眼片"></a>6. 眼片</h2><p>可以去购物平台购买 PVC 防尘网作为眼片的基底，我选择的是 0.5mm 孔径。固定方式可以选择胶带&#x2F;热熔胶&#x2F;磁铁，总之可以自行发挥创意（<br><img src="/../resources/blog/24072701/12.webp" srcset="/img/loading.gif" lazyload></p>
+<p>关于眼片素材，可以选择从现成的插图素材里扣，或者也可以自己画。调整好大小之后打印到不干胶打印纸上，裁剪下来并粘贴即可。<br><img src="/../resources/blog/24072701/13.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="7-睫毛"><a href="#7-睫毛" class="headerlink" title="7. 睫毛"></a>7. 睫毛</h2><p>将黑色不织布裁剪成合适的形状，然后粘贴到头壳上即可。可以先在普通的纸上用铅笔打个草稿。<br><img src="/../resources/blog/24072701/15.webp" srcset="/img/loading.gif" lazyload><br><img src="/../resources/blog/24072701/14.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="8-调整海绵"><a href="#8-调整海绵" class="headerlink" title="8. 调整海绵"></a>8. 调整海绵</h2><p>在购物平台上购买一点中高密度海绵来作为头壳内部的缓冲材料，增加舒适度，同时也能让头壳更贴合。可以用绑带固定，也可以用纳米胶（传统的双面胶是很难黏住的）。</p>
+<p>由于装上了假发之后这一步会很难进行，所以强烈建议在装假发之前就把海绵调整到舒适贴合的程度。<br><img src="/../resources/blog/24072701/16.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="9-饰品"><a href="#9-饰品" class="headerlink" title="9. 饰品"></a>9. 饰品</h2><p>不同的角色要准备不同的饰品，所以这一步就留给各位自由发挥了。<br><img src="/../resources/blog/24072701/17.webp" srcset="/img/loading.gif" lazyload><br><img src="/../resources/blog/24072701/18.webp" srcset="/img/loading.gif" lazyload><br><img src="/../resources/blog/24072701/19.webp" srcset="/img/loading.gif" lazyload></p>
+<h2 id="10-假发"><a href="#10-假发" class="headerlink" title="10. 假发"></a>10. 假发</h2><p>自制头壳的又一大难点。由于头壳的头围比普通人大一圈，传统的假发在头壳上会显得很奇怪，所以我们就只能自己修头发了。但又由于我们低成本的原则，购买昂贵的 kig 专用假发并不合适，所以我就选择了以下方案。</p>
+<p>首先去购物平台购买一顶正常头围的假发，但需要选择长度稍长，发量多一些的未修剪假发。接下来用四个魔术贴分别固定在头壳的上下左右四个位置，同时将另一面固定到假发发网上，然将假发与头壳上的魔术贴对准并粘贴，这样就实现了在头壳上使用正常头围的假发。<br><img src="/../resources/blog/24072701/22.webp" srcset="/img/loading.gif" lazyload></p>
+<p>接下来对假发进行修剪，详细步骤仍然是建议参考网上的各种教程，由于本人也技术不精，这里就不误人子弟了（<br><img src="/../resources/blog/24072701/20.webp" srcset="/img/loading.gif" lazyload alt="修剪前"><br><img src="/../resources/blog/24072701/21.webp" srcset="/img/loading.gif" lazyload alt="修剪后"></p>
+<hr>
+<p>至此，头壳的部分就算是完成了。<br><img src="/../resources/blog/24072701/23.webp" srcset="/img/loading.gif" lazyload></p>
+<h1 id="后续的工作"><a href="#后续的工作" class="headerlink" title="后续的工作"></a>后续的工作</h1><p>头壳完成之后，还需要一些后续步骤。</p>
+<h2 id="Kig-皮"><a href="#Kig-皮" class="headerlink" title="Kig 皮"></a>Kig 皮</h2><p>所谓的 Kig 皮其实就是一套肉粉色紧身衣，可以让头壳和皮肤的颜色匹配度更高。由于 Kig 皮个人制作难度较高，且价格相对定制头壳来说还是可以接受的（~400），所以这里我还是推荐找专门的店家定制。详情可以参考 <a target="_blank" rel="noopener" href="https://how.kig.land/get-start#-%E4%BB%8E-kigurumi-%E7%B4%A7%E8%BA%AB%E8%A1%A3%E5%BA%97%E5%AE%B6%E9%87%87%E8%B4%AD%E7%9A%AE">这篇文章</a>。</p>
+<h2 id="Cosplay-服饰"><a href="#Cosplay-服饰" class="headerlink" title="Cosplay 服饰"></a>Cosplay 服饰</h2><p>准备 Cosplay 服饰反而是比较简单的一件事情了，选择合适的尺寸，找店家制作即可（只要是本人能穿的下的尺寸就能给 Kig 穿）。<br><img src="/../resources/blog/24072701/24.webp" srcset="/img/loading.gif" lazyload></p>
+<h1 id="一切就绪！"><a href="#一切就绪！" class="headerlink" title="一切就绪！"></a>一切就绪！</h1><p>如果你跟着做到了这里，<strong>那么恭喜你！</strong>你可以开始你的 Kigurumi 之旅了。<br><img src="/../resources/blog/24072701/25.webp" srcset="/img/loading.gif" lazyload></p>
+<h1 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h1><p>如果你还有其他本文未提及的问题，也可以直接来问我。你可以加 <code>QQ2114085565</code> 或发邮件到 <code>ltfjx2333@gmail.com</code>。  </p>
+<p><strong>祝玩的开心：D</strong></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9C%88%E5%8D%8E/" class="category-chain-item">月华</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DIY/" class="print-no-link">#DIY</a>
+      
+        <a href="/tags/3D-%E6%89%93%E5%8D%B0/" class="print-no-link">#3D 打印</a>
+      
+        <a href="/tags/Kigurumi/" class="print-no-link">#Kigurumi</a>
+      
+        <a href="/tags/Cosplay/" class="print-no-link">#Cosplay</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>记一次自制 Kigurumi 头壳</div>
+      <div>https://blog.akyuu.cn/post/24072701/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>RLt</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-cc-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/post/24110201/" title="Yoiyami-v3 服务器搬家记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Yoiyami-v3 服务器搬家记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/post/23060501/" title="舞萌 DX 2023 彩框留念">
+                        <span class="hidden-mobile">舞萌 DX 2023 彩框留念</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="SOHUCS" sid='https://blog.akyuu.cn/post/24072701/'></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#SOHUCS', function() {
+      Fluid.utils.createScript("https://changyan.sohu.com/upload/changyan.js", function() {
+        window.changyan.api.config({"appid":"cyviBJgu4","appkey":"7f071327ea88e6bbca9af55333a19c23"})
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+      <div style='font-size: 1.15rem;font-weight: bold;'>
+  <a href='https://hexo.io' target='_blank' rel='nofollow noopener'><span>Hexo</span></a>
+  <i class='iconfont icon-love'></i>
+  <a href='https://github.com/akyuu-cn/hexo-theme-fluid-EF' target='_blank' rel='nofollow noopener'><span>Fluid</span></a>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.5rem;opacity: 0.5'>
+  <span id='timeDate'>...</span>
+  <span id='times'>...</span>
+  <script src='/resources/js/site_duration.js'></script>
+</div>
+<div style='font-size: 0.75rem;margin-top: 0.1rem;margin-bottom: 1.5rem;opacity: 0.25'>
+  <span> - 冷た過ぎる春の雪 何を終わらせ始める - </span>
+</div>
+
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/autoloader/prism-autoloader.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script type="text/javascript" src="/js/jquery.parallax.js"></script>
+<script type="text/javascript">var firstScroll=false;
+var mobile=(function(){
+    var info = navigator.userAgent
+    var isPhone = /mobile/i.test(info)
+    return isPhone
+})();
+$(window).resize(function () { 
+    if(!mobile){
+        var element=$('.jparallax-layer');
+        element.unparallax();
+        element.css('top', 'auto');
+        element.css('margin-top', 'auto');
+        element.css('left', 'auto');
+        element.css('margin-left', 'auto');
+        element.parallax({} , { });
+    }
+});
+// 因为 banner 的位置本就在 import_script 函数注入的 HTML 代码之前
+// 所以这里不用 $(window).load。
+if(!mobile){
+    $('.jparallax-layer').parallax({} , { });
+}</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/resources/js/potato_ef_patch.js"></script><!-- hexo injector body_end end --></body>
+</html>
