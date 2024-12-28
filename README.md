@@ -1,5 +1,5 @@
 <div align="center">
-<img width="90" src="source/resources/pictures/fluid.png" alt="logo">
+<img width="90" src="source/resources/pictures/evershifting_fountain.png" alt="logo">
 <h2>Evershifting Fountain | 万象泉</h2>
 <h3>- 光辉 -</h3>
 </div>

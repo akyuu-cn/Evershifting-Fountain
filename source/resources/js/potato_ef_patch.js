@@ -1,28 +1,35 @@
 // 如果当前页面为404页，删除页脚
 if (document.title.split(" - ")[0] == 404) {
     document.querySelector('footer').innerHTML = null
-    console.log("热力猫你坏事做尽！");
+    console.log("热力猫你坏事做尽！")
 }
 
 
 // 自动排序 - 在分类页面执行，使分类按照指定顺序排序。
 if (document.title.split(" - ")[0] == "分类") {
 
-    let cate = document.getElementsByClassName('category row nomargin-x');
+    let category = Array.from(document.getElementsByClassName('category'))
 
     const order = ["日影", "月华", "共振", "星宿", "光辉"]
-    let temp = ""
+    const description = ["随手记点啥的分类", "记录自己探索过程的分类", "与开发相关的分类", "与现实世界里的故事相关的分类", "公告/发布相关的分类"]
+    let _ = ""
 
-    for (let i = 0; i < order.length; i++) {
-        for (let ii = 0; ii < order.length; ii++) {
-            if (cate[ii].innerHTML.indexOf(order[i]) != -1) {
-                temp = temp + cate[ii].outerHTML;
-            }
-        }
+    order.forEach(name => {
+        let target = category.find(element => { return element.children[0].getAttribute("title") == name })
+        let node = document.createElement("div")
+        node.innerHTML = `~ ${description[order.indexOf(name)]}`
+        node.style.opacity = 0.6
+        node.style.marginLeft = "0.5rem"
+        node.style.marginRight = "0.5rem"
+        node.style.fontSize = "16px"
+        node.style.fontWeight = "lighter"
+        node.style.marginTop = "0.3rem"
+        target.children[0].insertBefore(node, target.children[0].children[1])
+        _ += target.outerHTML
+    })
 
-    }
+    document.getElementsByClassName("category-list")[0].innerHTML = _
 
-    document.getElementsByClassName("category-list")[0].innerHTML = temp
 }
 
 
