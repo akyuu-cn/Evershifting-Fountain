@@ -156,7 +156,7 @@ color:
   # 副标题字体色
   # Color of navigation bar text
   subtitle_color: "#fff"
-  subtitle_color_dark: "#d0d0d0"
+  subtitle_color_dark: "#fff"
 
   # 全局字体色
   # Color of global text
@@ -241,6 +241,7 @@ custom_css:
   - /resources/css/font.css
   - /resources/css/navbar.css
   - /resources/css/codeblock.css
+  - /resources/css/group_image_row.css
 # 网页访问统计
 # Analysis of website visitors
 web_analytics: # 网页访问统计
